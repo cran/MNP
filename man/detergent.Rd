@@ -12,12 +12,12 @@
 
   \tabular{lll}{
     choice \tab factor \tab a brand chosen by each household\cr
-    Tide \tab numeric \tab log price of Tide\cr
-    Wisk \tab numeric \tab log price of Wisk\cr
-    EraPlus \tab numeric \tab log price of EraPlus\cr
-    Surf \tab numeric \tab log price of Surf\cr
-    Solo \tab numeric \tab log price of Solo\cr
-    All \tab numeric \tab log price of All\cr
+    TidePrice \tab numeric \tab log price of Tide\cr
+    WiskPrice \tab numeric \tab log price of Wisk\cr
+    EraPlusPrice \tab numeric \tab log price of EraPlus\cr
+    SurfPrice \tab numeric \tab log price of Surf\cr
+    SoloPrice \tab numeric \tab log price of Solo\cr
+    AllPrice \tab numeric \tab log price of All\cr
   }
 
 }

@@ -3,16 +3,15 @@
 \alias{mnp}
 \alias{MNP}
 
-\title{Fitting Multinomial Probit Models via Markov chain Monte Carlo} 
+\title{Fitting the Multinomial Probit Model via Markov chain Monte Carlo} 
 
 \description{
   \code{mnp} is used to fit (Bayesian) multinomial probit
-  models via Markov chain Monte Carlo. Along with the standard
-  multinomial probit model, \code{mnp} can also fit models with
-  different choice sets for each observation, and complete or partial
-  ordering of all the available alternatives. The computation uses the
-  efficient marginal data augmentation algorithm that is developed by
-  Imai and van Dyk (2005).  }
+  model via Markov chain Monte Carlo.  \code{mnp} can also fit the model
+  with different choice sets for each observation, and complete or
+  partial ordering of all the available alternatives. The computation
+  uses the efficient marginal data augmentation algorithm that is
+  developed by Imai and van Dyk (2005).  }
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
@@ -41,9 +40,9 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   }
   \item{base}{The name of the base category. For the standard
     multinomial probit model, the default is the lowest level of the
-    response variable. For the multinomial ordered probit model, the
-    default base category is the last column in the matrix of
-    response variables.
+    response variable. For the multinomial probit model with ordered
+    preferences, the default base category is the last column in the
+    matrix of response variables.
   }
   \item{latent}{logical. If \code{TRUE}, then the latent variable W will
     be returned. See Imai and van Dyk (2005) for the notation. The
@@ -97,14 +96,14 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
 }
 
 \details{
-  For \strong{the standard multinomial probit model} where only the most
+  To fit the multinomial probit model when only the most
   preferred choice is observed, use the syntax for the formula, \code{y
   ~ x1 + x2}, where \code{y} is a factor variable indicating the most
   preferred choice and \code{x1} and \code{x2} are individual-specific
   covariates. The interactions of individual-specific variables with each
   of the choice indicator variables will be fit.
   
-  To specify \strong{choice-specific covariates}, use the syntax,
+  To specify choice-specific covariates, use the syntax,
   \code{choiceX=list(A=cbind(z1, z2), B=cbind(z3, z4), C=cbind(z5,
   z6))}, where \code{A}, \code{B}, and \code{C} represent the choice
   names of the response variable, and \code{z1} and \code{z2} are each
@@ -116,7 +115,7 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   name for \code{z1}, \code{z3}, and \code{z5}, and \code{quantity}
   refers to that for \code{z2}, \code{z4}, and \code{z6}.
 
-  If \strong{the choice set} varies from one observation to another, use the
+  If the choice set varies from one observation to another, use the
   syntax, \code{cbind(y1, y2, y3) ~ x1 + x2}, in the case of a
   three choice problem, and indicate unavailable alternatives by
   \code{NA}. If only the most preferred choice is observed, \code{y1},
@@ -126,9 +125,9 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
    response matrix, \code{y3} in this particular example syntax, is
    used as the base category.
   
-  For \strong{the multinomial ordered probit model} where the complete
-  or partial ordering of the available alternatives is recorded, use the
-  same syntax as when the choice set varies (i.e., \code{cbind(y1, y2,
+  To fit the multinomial probit model when the complete
+  or partial ordering of the available alternatives is recorded, use
+  the same syntax as when the choice set varies (i.e., \code{cbind(y1, y2,
   y3, y4) ~ x1 + x2}). For each observation, all the available
   alternatives in the response variables should be numerically ordered
   in terms of preferences such as \code{1 2 2 3}. Ties are allowed. The
@@ -144,8 +143,9 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
 ## load the detergent data
 data(detergent)
 ## run the standard multinomial probit model with intercepts and the price
-res1 <- mnp(choice ~ 1, choiceX = list(Surf=Surf, Tide=Tide, Wisk=Wisk,
-                                       EraPlus=EraPlus, Solo=Solo, All=All),
+res1 <- mnp(choice ~ 1, choiceX = list(Surf=SurfPrice, Tide=TidePrice,
+                                       Wisk=WiskPrice, EraPlus=EraPlusPrice,
+                                       Solo=SoloPrice, All=AllPrice),
             cXnames = "price", data = detergent, n.draws = 500, burnin = 100,
             thin = 3, verbose = TRUE)
 ## summarize the results
@@ -155,7 +155,7 @@ predict(res1, newdata = detergent[1:3,], type="prob", verbose = TRUE)
 
 ## load the Japanese election data
 data(japan)
-## run the multinomial ordered probit model
+## run the multinomial probit model with ordered preferences
 res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age, data = japan,
             verbose = TRUE)
 ## summarize the results

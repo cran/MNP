@@ -1,8 +1,8 @@
 predict.mnp <- function(object, newdata = NULL,
-                        type = c("prob", "choice", "latent"),
+                        type = c("prob", "choice", "order", "latent"),
                         verbose = FALSE, ...){
 
-  if (NA %in% match(type, c("prob", "choice", "latent")))
+  if (NA %in% match(type, c("prob", "choice", "order", "latent")))
     stop("Invalid input for `type'.")
       
   p <- object$n.alt
@@ -11,7 +11,6 @@ predict.mnp <- function(object, newdata = NULL,
   n.draws <- nrow(param)
   coef <- param[,1:n.cov]
   cov <- param[,(n.cov+1):ncol(param)]
-  alt <- object$alt
   
   ## get X matrix ready
   if (is.null(newdata)) 
@@ -20,7 +19,7 @@ predict.mnp <- function(object, newdata = NULL,
     call <- object$call
     x <- xmatrix.mnp(as.formula(call$formula), data = newdata,
                      choiceX = call$choiceX,
-                     cXnames = call$cXnames,
+                     cXnames = eval(call$cXnames),
                      base = object$base, n.dim = p-1,
                      lev = object$alt, MoP = is.matrix(object$y),
                      verbose = FALSE, extra = FALSE)    
@@ -29,8 +28,14 @@ predict.mnp <- function(object, newdata = NULL,
   n.obs <- nrow(x)
   if (verbose)
     cat("There are", n.obs, "observations to predict. Please wait...\n")
+
+  alt <- object$alt
+  if (object$base != alt[1]) 
+    alt <- c(object$base, alt[1:(length(alt)-1)])
+  
   ## computing W
-  W <- array(NA, dim=c(p-1, n.obs, n.draws))
+  W <- array(NA, dim=c(p-1, n.obs, n.draws), dimnames=c(alt[2:p],
+                                               NULL, 1:n.draws))
   tmp <- floor(n.draws/10)
   inc <- 1
   for (i in 1:n.draws) {
@@ -57,22 +62,30 @@ predict.mnp <- function(object, newdata = NULL,
     ans$w <- NULL
 
   ## computing Y
-  Y <- matrix(NA, nrow = n.obs, ncol = n.draws)
+  Y <- matrix(NA, nrow = n.obs, ncol = n.draws, dimnames=list(NULL, 1:n.draws))
+  O <- array(NA, dim=c(p, n.obs, n.draws), dimnames=list(alt, NULL, 1:n.draws))
   for (i in 1:n.obs) 
-    for (j in 1:n.draws)
+    for (j in 1:n.draws) {
       Y[i,j] <- alt[match(max(c(0, W[,i,j])), c(0,W[,i,j]))]
+      O[,i,j] <- rank(c(0, -W[,i,j]))
+    }
   if ("choice" %in% type)
     ans$y <- Y
   else
     ans$y <- NULL
+  if ("order" %in% type)
+    ans$o <- O
+  else
+    ans$o <- NULL
 
   ## computing P
-  P <- matrix(NA, nrow = n.obs, ncol = p)
-  colnames(P) <- alt
-  for (i in 1:p)
-    P[,i] <- apply(Y==alt[i], 1, mean) 
-  if ("prob" %in% type)
+  if ("prob" %in% type) {
+    P <- matrix(NA, nrow = n.obs, ncol = p)
+    colnames(P) <- alt
+    for (i in 1:p)
+      P[,i] <- apply(Y==alt[i], 1, mean) 
     ans$p <- P
+  }
   else
     ans$p <- NULL
 

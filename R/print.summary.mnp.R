@@ -13,7 +13,7 @@ print.summary.mnp <- function(x, digits = max(3, getOption("digits") - 3), ...) 
   cat("\nBase category:", x$base)  
   cat("\nNumber of alternatives:", x$n.alt)
   cat("\nNumber of observations:", x$n.obs)
-  cat("\nNumber of Gibbs draws:", x$n.draws)
+  cat("\nNumber of stored MCMC draws:", x$n.draws)
   cat("\n\n")
   invisible(x)
 }
