@@ -103,7 +103,7 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   covariates. The interactions of individual-specific variables with each
   of the choice indicator variables will be fit.
   
-  To specify \strong{choice specific covariates}, use the syntax,
+  To specify \strong{choice-specific covariates}, use the syntax,
   \code{choiceX=list(A=cbind(z1, z2), B=cbind(z3, z4), C=cbind(z5,
   z6))}, where \code{A}, \code{B}, and \code{C} represent the choice
   names of the response variable, and \code{z1} and \code{z2} are each
