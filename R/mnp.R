@@ -1,14 +1,14 @@
-mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
-                    cXnames = NULL, base = NULL, n.draws = 5000,
-                    p.var = "Inf", p.df = n.dim+1, p.scale = 1,
-                    coef.start = 0, cov.start = 1, burnin = 0,
-                    thin = 0, verbose = FALSE) {   
+mnp <- function(formula, data = parent.frame(), choiceX = NULL,
+                cXnames = NULL, base = NULL, n.draws = 5000,
+                p.var = "Inf", p.df = n.dim+1, p.scale = 1,
+                coef.start = 0, cov.start = 1, burnin = 0,
+                thin = 0, verbose = FALSE) {   
   call <- match.call()
   mf <- match.call(expand = FALSE)
   mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$p.var <-
     mf$p.df <- mf$p.scale <- mf$coef.start <- mf$cov.start <-
       mf$verbose <- mf$burnin <- mf$thin <- NULL   
-  mf[[1]] <- as.name("model.frame.default")
+  mf[[1]] <- as.name("model.frame")
   mf$na.action <- 'na.pass'
   mf <- eval.parent(mf)
 
@@ -26,7 +26,7 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   if(verbose)
     cat("\nThe base category is `", base, "'.\n\n", sep="") 
   if (p < 3)
-    stop(paste("Error: The number of alternatives should be at least 3."))
+    stop("The number of alternatives should be at least 3.")
   if(verbose) 
     cat("The total number of alternatives is ", p, ".\n\n", sep="") 
   
@@ -52,9 +52,9 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   }
   else if (is.matrix(p.var)) {
     if (ncol(p.var) != n.cov || nrow(p.var) != n.cov)
-      stop("Error: The dimension of `p.var' should be ", n.cov, " x ", n.cov, sep="")
+      stop("The dimension of `p.var' should be ", n.cov, " x ", n.cov, sep="")
     if (sum(sign(eigen(p.var)$values) < 1) > 0)
-      stop("Error: `p.var' must be positive definite.")
+      stop("`p.var' must be positive definite.")
     p.prec <- solve(p.var)
   }
   else {
@@ -66,17 +66,17 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   ## checking prior for Sigma
   p.df <- eval(p.df)
   if (length(p.df) > 1)
-    stop(paste("Error: `p.df' must be a positive integer."))
+    stop("`p.df' must be a positive integer.")
   if (p.df < n.dim)
-    stop(paste("Error: `p.df' must be at least ", n.dim, ".", sep=""))
+    stop(paste("`p.df' must be at least ", n.dim, ".", sep=""))
   if (abs(as.integer(p.df) - p.df) > 0)
-    stop(paste("Error: `p.df' must be a positive integer."))
+    stop("`p.df' must be a positive integer.")
   if (!is.matrix(p.scale))  
     p.scale <- diag(p.scale, n.dim)
   if (ncol(p.scale) != n.dim || nrow(p.scale) != n.dim)
-    stop("Error: `p.scale' must be ", n.dim, " x ", n.dim, sep="")
+    stop("`p.scale' must be ", n.dim, " x ", n.dim, sep="")
   if (sum(sign(eigen(p.scale)$values) < 1) > 0)
-    stop("Error: `p.scale' must be positive definite.")
+    stop("`p.scale' must be positive definite.")
   else if (p.scale[1,1] != 1) {
     p.scale[1,1] <- 1
     warning("p.scale[1,1] will be set to 1.")
@@ -92,16 +92,16 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   if (length(coef.start) == 1)
     coef.start <- rep(coef.start, n.cov)
   else if (length(coef.start) != n.cov)
-    stop(paste("Error: The dimenstion of `coef.start' must be  ",
+    stop(paste("The dimenstion of `coef.start' must be  ",
                n.cov, ".", sep=""))
   if (!is.matrix(cov.start)) {
     cov.start <- diag(n.dim)*cov.start
     cov.start[1,1] <- 1
   }
   else if (ncol(cov.start) != n.dim || nrow(cov.start) != n.dim)
-    stop("Error: The dimension of `cov.start' must be ", n.dim, " x ", n.dim, sep="")
+    stop("The dimension of `cov.start' must be ", n.dim, " x ", n.dim, sep="")
   else if (sum(sign(eigen(cov.start)$values) < 1) > 0)
-    stop("Error: `cov.start' must be a positive definite matrix.")
+    stop("`cov.start' must be a positive definite matrix.")
   else if (cov.start[1,1] != 1) {
     cov.start[1,1] <- 1
     warning("cov.start[1,1] will be set to 1.")
@@ -109,9 +109,9 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   
   ## checking thinnig and burnin intervals
   if (burnin < 0)
-    stop("Error: `burnin' should be a non-negative integer.") 
+    stop("`burnin' should be a non-negative integer.") 
   if (thin < 0)
-    stop("Error: `thin' should be a non-negative integer.")
+    stop("`thin' should be a non-negative integer.")
   keep <- thin + 1
   
   ## running the algorithm
@@ -139,7 +139,7 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   res <- list(param =param, x = X, y = Y, call = call, n.alt = p,
               p.mean = if(p.imp) NULL else p.mean, p.var = p.var,
               p.df = p.df, p.scale = p.scale, burnin = burnin, thin =
-              thin, seed = .Random.seed) 
+              thin) 
   class(res) <- "mnp"
   return(res)
 }

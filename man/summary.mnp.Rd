@@ -10,13 +10,13 @@
 }
 
 \usage{
-  summary.mnp(object, CI=c(2.5, 97.5), ...)
+  \method{summary}{mnp}(object, CI=c(2.5, 97.5), ...)
 
-  print.summary.mnp(x, digits = max(3, getOption("digits") - 3), ...)
+  \method{print}{summary.mnp}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \arguments{
-  \item{object}{An output object from \code{mprobit}.}
+  \item{object}{An output object from \code{mnp}.}
   \item{CI}{A 2 dimensional vector of lower and upper bounds for the
     credible intervals used to summarize the results. The default is the
     equal tail 95 percent credible interval.
@@ -29,17 +29,17 @@
 \value{
   \code{summary.mnp} yields an object of class \code{summary.mnp}
   containing the following elements:
-  \item{call}{The call from \code{mprobit}.}
+  \item{call}{The call from \code{mnp}.}
   \item{n.alt}{The total number of alternatives.}
   \item{n.obs}{The number of observations.}
   \item{coef.table}{The summary of the posterior distribution of the
     coefficients. }
-  \item{cov.table}{The summary of the posterior distribtution of the
+  \item{cov.table}{The summary of the posterior distribution of the
     covariance matrix.}
   This object can be printed by \code{print.summary.mnp}
 }
 
-\seealso{\code{mprobit}}
+\seealso{\code{mnp}}
 
 \author{
   Kosuke Imai, Department of Politics, Princeton University

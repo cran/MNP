@@ -1,4 +1,4 @@
-xmatrix.mnp <- function(formula, data = sys.parent(), choiceX=NULL,
+xmatrix.mnp <- function(formula, data = parent.frame(), choiceX=NULL,
                         cXnames=NULL, base=NULL, n.dim, lev,
                         MoP=FALSE, verbose=FALSE, extra=FALSE) {
   call <- match.call()

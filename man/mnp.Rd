@@ -1,13 +1,12 @@
-\name{mprobit}
+\name{mnp}
 
 \alias{mnp}
 \alias{MNP}
-\alias{mprobit}
 
 \title{Fitting the Multinomial Probit Models via Markov chain Monte Carlo} 
 
 \description{
-  \code{mprobit} is used to fit the (Bayesian) Multinomial Probit
+  \code{mnp} is used to fit the (Bayesian) Multinomial Probit
   models via Markov chain Monte Carlo. Along with the standard
   Multinomial Probit model, it can also fit models with different choice
   sets for each observation, and complete or partial ordering of all the
@@ -16,7 +15,7 @@
 }
 
 \usage{
-mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
+mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
         base = NULL, n.draws = 5000, p.var = "Inf",  p.df = n.dim+1, p.scale = 1,
         coef.start = 0, cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
 }
@@ -29,7 +28,7 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   }
   \item{data}{An optional data frame in which to interpret the variables
     in \code{formula} and \code{choiceX}. The default is the environment
-    in which \code{mprobit} is called.
+    in which \code{mnp} is called.
   }
   \item{choiceX}{An optional list containing a matrix of choice-specific
     covariates for each category. Details and examples are provided
@@ -59,10 +58,10 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     \code{n.dim+1}, which is equal to the total number of alternatives.
   }
   \item{p.scale}{A positive definite matrix whose first diagonal element
-    is setn to \code{1}. The prior scale matrix for the covariance
+    is set to \code{1}. The prior scale matrix for the covariance
     matrix. The first diagonal element will be set to 1 if
     it is not equal to 1 already. A scalar input can be used to set the
-    scale matrix to a diagonal matrix with diagonal elemets equal to
+    scale matrix to a diagonal matrix with diagonal elements equal to
     the scalar input value, except that the first diagonal element will
     be set to one. The default is \code{1}.
   }
@@ -74,7 +73,7 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     element is set to \code{1}. The starting values for the covariance
     matrix. The first diagonal element will be set to 1 if it is not
     equal to 1 already. A scalar input can be used to set the starting
-    value to a diagonal matrix with diagonal elemets equal to the scalar
+    value to a diagonal matrix with diagonal elements equal to the scalar
     input value, except that the first diagonal element will be set to
     one. The default is \code{1}. 
   }
@@ -97,15 +96,15 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   preferred choice is observed, use the syntax, \code{y ~ x1 +
     x2}, where \code{y} is a factor variable indicating the most
   preferred choice and \code{x1} and \code{x2} are individual-specific
-  covariates. The inerations of individual-specific variables with each
+  covariates. The interactions of individual-specific variables with each
   of the choice indicator variables will be fit.
   
   To specify \strong{choice specific covariates}, use the syntax,
   \code{choiceX=list(A=cbind(z1, z2), B=cbind(z3, z4), C=cbind(z5,
   z6))}, where \code{A}, \code{B}, and \code{C} represent the choice
-  names of the response varaible, and \code{z1} and \code{z2} are each
+  names of the response variable, and \code{z1} and \code{z2} are each
   vectors of length \eqn{n} that record the values of the two
-  choice-specic covariates for each individual for choice A, likewise
+  choice-specific covariates for each individual for choice A, likewise
   for \code{z3}, ..., \code{z6}. The corresponding variable names via
   \code{cXnames=c("price", "quantity")}
   need to be specified, where \code{price} refers to the coefficient
@@ -139,8 +138,8 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
 ## load the detergent data
 data(detergent)
 ## run the standard Multinomial Probit model with intercepts and the price
-res1 <- mprobit(choice ~ 1, choiceX=list(Surf=Surf, Tide=Tide, Wisk=Wisk,
-                                         EraPlus=EraPlus, Solo=Solo, All=All),
+res1 <- mnp(choice ~ 1, choiceX=list(Surf=Surf, Tide=Tide, Wisk=Wisk,
+                                     EraPlus=EraPlus, Solo=Solo, All=All),
                 cXnames=c("price"), data=detergent, n.draws=5000,
                 p.df=6, burnin=1000, thin=3, verbose=TRUE) 
 summary(res1)
@@ -148,8 +147,8 @@ summary(res1)
 ## load the Japanese election data
 data(japan)
 ## run the Multinomial ordered Probit model
-res2 <- mprobit(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age,
-                data = japan, n.draws=5000, verbose = TRUE)
+res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age,
+            data = japan, n.draws=5000, verbose = TRUE)
 summary(res2)
 }
 
@@ -168,8 +167,6 @@ summary(res2)
   \item{p.scale}{The prior scale matrix for the covariance matrix.}
   \item{burnin}{The number of initial burnin draws.}
   \item{thin}{The thinning interval.}
-  \item{seed}{The Random seed that is used for Gibbs sampling.
-    Stores \code{.Random.seed}.
   }
 }
 
@@ -188,8 +185,8 @@ summary(res2)
   \url{http://www.ics.uci.edu/~dvd}.  
 }
 
-\seealso{\code{summary.mnp};
-  \url{http://www.princeton.edu/~kimai/research/MNP.html} for the full documentation.}
+\seealso{\code{summary.mnp}; MNP home page at
+  \url{http://www.princeton.edu/~kimai/research/MNP.html}}
 
 \keyword{models}
 
