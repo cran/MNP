@@ -1,17 +1,20 @@
 mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
                     cXnames = NULL, base = NULL, n.draws = 5000,
                     p.var = "Inf", p.df = n.dim+1, p.scale = 1,
-                    p.alpha0 = 1, coef.start = 0, cov.start = 1,
-                    burnin = 0, thin = 0, verbose = FALSE) {  
+                    coef.start = 0, cov.start = 1, burnin = 0,
+                    thin = 0, verbose = FALSE) {   
   call <- match.call()
   mf <- match.call(expand = FALSE)
   mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$p.var <-
-    mf$p.df <- mf$p.scale <- mf$p.alpha0 <- mf$coef.start <-
-      mf$cov.start <- mf$verbose <- mf$burnin <- mf$thin <- NULL  
+    mf$p.df <- mf$p.scale <- mf$coef.start <- mf$cov.start <-
+      mf$verbose <- mf$burnin <- mf$thin <- NULL   
   mf[[1]] <- as.name("model.frame.default")
   mf$na.action <- 'na.pass'
   mf <- eval.parent(mf)
 
+  ## fix this parameter
+  p.alpha0 <- 1
+  
   ## obtaining Y
   tmp <- ymatrix.mnp(mf, base=base, extra=TRUE, verbose=verbose)
   Y <- tmp$Y
@@ -78,8 +81,6 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
     p.scale[1,1] <- 1
     warning("p.scale[1,1] will be set to 1.")
   }
-  if (p.alpha0 <= 0)
-    stop("Error: `p.alpha0' must be positive scalar")
   Signames <- NULL
   for(j in 1:n.dim)
     for(k in 1:n.dim)
@@ -137,8 +138,8 @@ mprobit <- function(formula, data = parent.frame(), choiceX = NULL,
   ## returning the object
   res <- list(param =param, x = X, y = Y, call = call, n.alt = p,
               p.mean = if(p.imp) NULL else p.mean, p.var = p.var,
-              p.df = p.df, p.scale = p.scale, p.alpha0 = p.alpha0,
-              burnin = burnin, thin = thin, seed = .Random.seed)
+              p.df = p.df, p.scale = p.scale, burnin = burnin, thin =
+              thin, seed = .Random.seed) 
   class(res) <- "mnp"
   return(res)
 }

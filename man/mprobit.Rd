@@ -18,8 +18,7 @@
 \usage{
 mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
         base = NULL, n.draws = 5000, p.var = "Inf",  p.df = n.dim+1, p.scale = 1,
-        p.alpha0 = 1, coef.start = 0, cov.start = 1, burnin = 0, thin = 0,
-        verbose = FALSE) 
+        coef.start = 0, cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
 }
 
 \arguments{
@@ -67,9 +66,6 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     the scalar input value, except that the first diagonal element will
     be set to one. The default is \code{1}.
   }
-  \item{p.alpha0}{A positive scalar. The unidentified prior parameter
-    for the covariance matrix. 
-  }
   \item{coef.start}{A vector. The starting values for the coefficients.
     A scalar input will set the starting values for all the coefficients
     equal to that value.  The default is \code{0}.
@@ -110,11 +106,11 @@ mprobit(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   names of the response varaible, and \code{z1} and \code{z2} are each
   vectors of length \eqn{n} that record the values of the two
   choice-specic covariates for each individual for choice A, likewise
-  for \code{z3}, ..., \code{z6}. You also need to specify the
-  corresponding variable names via \code{cXnames=c("price", "quantity")}
-  where \code{price} refers to the coefficient name for \code{z1},
-  \code{z3}, and \code{z5}, and \code{quantity} refers to that for
-  \code{z2}, \code{z4}, and \code{z6}.
+  for \code{z3}, ..., \code{z6}. The corresponding variable names via
+  \code{cXnames=c("price", "quantity")}
+  need to be specified, where \code{price} refers to the coefficient
+  name for \code{z1}, \code{z3}, and \code{z5}, and \code{quantity}
+  refers to that for \code{z2}, \code{z4}, and \code{z6}.
 
   If \strong{the choice set} varies from one observation to another, use the
   syntax, \code{cbind(y1, y2, y3) ~ x1 + x2}, in the case of a
@@ -170,7 +166,6 @@ summary(res2)
   \item{p.var}{The prior variance for the coefficients.}
   \item{p.df}{The prior degrees of freedom parameter for the covariance matrix.}
   \item{p.scale}{The prior scale matrix for the covariance matrix.}
-  \item{p.alpha0}{The unidentified prior parameter for the covariance matrix.}
   \item{burnin}{The number of initial burnin draws.}
   \item{thin}{The thinning interval.}
   \item{seed}{The Random seed that is used for Gibbs sampling.
