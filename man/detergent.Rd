@@ -3,7 +3,7 @@
 \alias{detergent}
 \title{Detergent Brand Choice}
 \description{
-  This dataset gives the detergent brand choice by households and the
+  This dataset gives the laundry detergent brand choice by households and the
   price of each brand. 
 }
 \usage{data(detergent)}

@@ -140,7 +140,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
   else{
     dcholdc(A0,n_cov,mtemp); /* Cholesky decomposition */
     for(j=0;j<n_cov;j++){
-      Xstar[n_samp*n_dim+j][n_cov]=0;
+      Xstar[n_samp*n_dim+j][n_cov]=b0[j];
       for(k=0;k<n_cov;k++){ 
 	Xstar[n_samp*n_dim+j][n_cov]+=mtemp[j][k]*b0[k]; 
 	Xstar[n_samp*n_dim+j][k]=mtemp[j][k];
@@ -400,6 +400,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
     FreeintMatrix(Y, n_samp);
   FreeMatrix(W, n_samp);
   FreeMatrix(X, n_samp*n_dim+n_cov);
+  FreeMatrix(Xbeta, n_samp);
   FreeMatrix(SS, n_cov+1);
   FreeMatrix(Sigma, n_dim);
   FreeMatrix(SigInv, n_dim);
@@ -411,9 +412,12 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
   FreeMatrix(A0, n_cov);
   FreeMatrix(S, n_dim);
   free(vtemp);
+  free(maxy);
+  free(ivtemp);
   FreeMatrix(Xstar, n_samp*n_dim+n_cov);
   FreeMatrix(mtemp, n_cov);
   FreeMatrix(mtemp1, n_dim);
+  FreeMatrix(mtemp2, n_dim);
   Free3DMatrix(PerSig, n_dim, n_dim);
 
 } /* main */

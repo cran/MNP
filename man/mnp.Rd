@@ -3,16 +3,16 @@
 \alias{mnp}
 \alias{MNP}
 
-\title{Fitting the Multinomial Probit Models via Markov chain Monte Carlo} 
+\title{Fitting Multinomial Probit Models via Markov chain Monte Carlo} 
 
 \description{
-  \code{mnp} is used to fit the (Bayesian) Multinomial Probit
+  \code{mnp} is used to fit (Bayesian) multinomial probit
   models via Markov chain Monte Carlo. Along with the standard
-  Multinomial Probit model, it can also fit models with different choice
-  sets for each observation, and complete or partial ordering of all the
-  available alternatives. The computation uses the efficient marginal
-  data augmentation algorithm that is developed by Imai and van Dyk (2004).
-}
+  multinomial probit model, \code{mnp} can also fit models with
+  different choice sets for each observation, and complete or partial
+  ordering of all the available alternatives. The computation uses the
+  efficient marginal data augmentation algorithm that is developed by
+  Imai and van Dyk (2005).  }
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
@@ -40,13 +40,14 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     below.
   }
   \item{base}{The name of the base category. For the standard
-    Multinomial Probit model, the default is the lowest level of the
-    response variable. For the Multinomial ordered Probit model, the
-    default base category will be the last column in the matrix of
+    multinomial probit model, the default is the lowest level of the
+    response variable. For the multinomial ordered probit model, the
+    default base category is the last column in the matrix of
     response variables.
   }
   \item{latent}{logical. If \code{TRUE}, then the latent variable W will
-    be returned. The default is \code{FALSE}
+    be returned. See Imai and van Dyk (2005) for the notation. The
+    default is \code{FALSE}.
   }
   \item{n.draws}{A positive integer. The number of MCMC draws. The
     default is \code{5000}.
@@ -55,30 +56,30 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     coefficients.  A scalar input can set the prior variance to the
     diagonal matrix whose diagonal element is equal to that value. The
     default is \code{"Inf"}, which represents an improper noninformative
-    prior on the coefficients.   
+    prior distribution on the coefficients.
   }
   \item{p.df}{A positive integer greater than \code{n.dim-1}. The prior
-  degree of freedom parameter for the covariance matrix. The default is
+  degrees of freedom parameter for the covariance matrix. The default is
     \code{n.dim+1}, which is equal to the total number of alternatives.
   }
   \item{p.scale}{A positive definite matrix whose first diagonal element
     is set to \code{1}. The prior scale matrix for the covariance
-    matrix. The first diagonal element will be set to 1 if
+    matrix. The first diagonal element is set to 1 if
     it is not equal to 1 already. A scalar input can be used to set the
     scale matrix to a diagonal matrix with diagonal elements equal to
-    the scalar input value, except that the first diagonal element will
-    be set to one. The default is \code{1}.
+    the scalar input value, except that the first diagonal element is
+    set to one. The default is \code{1}.
   }
   \item{coef.start}{A vector. The starting values for the coefficients.
-    A scalar input will set the starting values for all the coefficients
+    A scalar input sets the starting values for all the coefficients
     equal to that value.  The default is \code{0}.
   }
   \item{cov.start}{A positive definite matrix whose first diagonal
     element is set to \code{1}. The starting values for the covariance
-    matrix. The first diagonal element will be set to 1 if it is not
+    matrix. The first diagonal element is set to 1 if it is not
     equal to 1 already. A scalar input can be used to set the starting
     value to a diagonal matrix with diagonal elements equal to the scalar
-    input value, except that the first diagonal element will be set to
+    input value, except that the first diagonal element is set to
     one. The default is \code{1}. 
   }
   \item{burnin}{A positive integer. The burnin interval for the Markov
@@ -90,15 +91,15 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     that are skipped. The default is \code{0}. 
   }
   \item{verbose}{logical. If \code{TRUE}, helpful messages along with
-    a progress report (every 10\%) of the Gibbs sampling are printed
+    a progress report of the Gibbs sampling are printed
     on the screen. The default is \code{FALSE}.
   }
 }
 
 \details{
-  For \strong{the standard Multinomial Probit model} where only the most
-  preferred choice is observed, use the syntax, \code{y ~ x1 +
-    x2}, where \code{y} is a factor variable indicating the most
+  For \strong{the standard multinomial probit model} where only the most
+  preferred choice is observed, use the syntax for the formula, \code{y
+  ~ x1 + x2}, where \code{y} is a factor variable indicating the most
   preferred choice and \code{x1} and \code{x2} are individual-specific
   covariates. The interactions of individual-specific variables with each
   of the choice indicator variables will be fit.
@@ -118,13 +119,14 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   If \strong{the choice set} varies from one observation to another, use the
   syntax, \code{cbind(y1, y2, y3) ~ x1 + x2}, in the case of a
   three choice problem, and indicate unavailable alternatives by
-  \code{NA}. If only the most preferred choice is observed, y1, y2, and y3 are
+  \code{NA}. If only the most preferred choice is observed, \code{y1},
+  \code{y2}, and \code{y3} are
    indicator variables that take on the value one for individuals who
    prefer that choice and zero otherwise. The last column of the
    response matrix, \code{y3} in this particular example syntax, is
    used as the base category.
   
-  For \strong{the Multinomial ordered Probit model} where the complete
+  For \strong{the multinomial ordered probit model} where the complete
   or partial ordering of the available alternatives is recorded, use the
   same syntax as when the choice set varies (i.e., \code{cbind(y1, y2,
   y3, y4) ~ x1 + x2}). For each observation, all the available
@@ -141,7 +143,7 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
 \examples{
 ## load the detergent data
 data(detergent)
-## run the standard Multinomial Probit model with intercepts and the price
+## run the standard multinomial probit model with intercepts and the price
 res1 <- mnp(choice ~ 1, choiceX = list(Surf=Surf, Tide=Tide, Wisk=Wisk,
                                        EraPlus=EraPlus, Solo=Solo, All=All),
             cXnames = "price", data = detergent, n.draws = 500, burnin = 100,
@@ -150,7 +152,7 @@ summary(res1)
 
 ## load the Japanese election data
 data(japan)
-## run the Multinomial ordered Probit model
+## run the multinomial ordered probit model
 res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age, data = japan,
             verbose = TRUE)
 summary(res2)
@@ -180,10 +182,10 @@ summary(res2)
 }
 
 \references{
-  Imai, Kosuke and David A. van Dyk. (2004) \dQuote{A Bayesian Analysis of the
+  Imai, Kosuke and David A. van Dyk. (2005) \dQuote{A Bayesian Analysis of the
   Multinomial Probit Model Using the Marginal Data Augmentation,}
-  \emph{Journal of Econometrics},
-  Forthcoming. \url{http://www.princeton.edu/~kimai/research/mnp.html} 
+  \emph{Journal of Econometrics}, Vol. 124, No. 2 (February),
+  pp.311-344.
 }
 
 \author{

@@ -7,8 +7,8 @@
   Democratic Party (LDP), New Frontier Party (NFP), Sakigake (SKG), and
   Japanese Communist Party (JCP)) in Japan on the 0 (least preferred) - 100
   (most preferred) scale. It is based on the 1995 survey data of 418
-  individual voters. The data also include the sex, education and age of
-  those voters. 
+  individual voters. The data also include the sex, education level, and age of
+  the voters. 
 }
 
 \usage{data(japan)}
