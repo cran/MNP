@@ -16,8 +16,9 @@
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
-    base = NULL, n.draws = 5000, p.var = "Inf",  p.df = n.dim+1, p.scale = 1,
-    coef.start = 0, cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
+    base = NULL, latent = FALSE, n.draws = 5000, p.var = "Inf",
+    p.df = n.dim+1, p.scale = 1, coef.start = 0, cov.start = 1,
+    burnin = 0, thin = 0, verbose = FALSE) 
 }
 
 \arguments{
@@ -43,6 +44,9 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     response variable. For the Multinomial ordered Probit model, the
     default base category will be the last column in the matrix of
     response variables.
+  }
+  \item{latent}{logical. If \code{TRUE}, then the latent variable W will
+    be returned. The default is \code{FALSE}
   }
   \item{n.draws}{A positive integer. The number of MCMC draws. The
     default is \code{5000}.
@@ -161,6 +165,11 @@ summary(res2)
   \item{call}{The matched call.}
   \item{x}{The matrix of covariates.}
   \item{y}{The vector or matrix of the response variable.}
+  \item{w}{The three dimensional array of the latent variable, W. The
+    first dimension represents the alternatives, and the second
+    dimension indexes the observations. The third dimension represents
+    the Gibbs draws. Note that the latent variable for the base category
+    is set to 0, and therefore omitted from the output.} 
   \item{n.alt}{The total number of alternatives.}
   \item{p.var}{The prior variance for the coefficients.}
   \item{p.df}{The prior degrees of freedom parameter for the covariance matrix.}

@@ -1,13 +1,13 @@
 mnp <- function(formula, data = parent.frame(), choiceX = NULL,
-                cXnames = NULL, base = NULL, n.draws = 5000,
-                p.var = "Inf", p.df = n.dim+1, p.scale = 1,
-                coef.start = 0, cov.start = 1, burnin = 0,
-                thin = 0, verbose = FALSE) {   
+                cXnames = NULL, base = NULL, latent = FALSE,
+                n.draws = 5000, p.var = "Inf", p.df = n.dim+1,
+                p.scale = 1, coef.start = 0, cov.start = 1,
+                burnin = 0, thin = 0, verbose = FALSE) {   
   call <- match.call()
   mf <- match.call(expand = FALSE)
-  mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$p.var <-
-    mf$p.df <- mf$p.scale <- mf$coef.start <- mf$cov.start <-
-      mf$verbose <- mf$burnin <- mf$thin <- NULL   
+  mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$latent <-
+    mf$p.var <- mf$p.df <- mf$p.scale <- mf$coef.start <-
+      mf$cov.start <- mf$verbose <- mf$burnin <- mf$thin <- NULL   
   mf[[1]] <- as.name("model.frame")
   mf$na.action <- 'na.pass'
   mf <- eval.parent(mf)
@@ -44,18 +44,18 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
 
   ## checking the prior for beta
   p.imp <- FALSE 
-  if (is.matrix(p.var)) {
+  if (p.var == Inf) {
+    p.imp <- TRUE
+    p.prec <- diag(0, n.cov)
+    if (verbose)
+      cat("Improper prior will be used for beta.\n\n")
+  }
+  else if (is.matrix(p.var)) {
     if (ncol(p.var) != n.cov || nrow(p.var) != n.cov)
       stop("The dimension of `p.var' should be ", n.cov, " x ", n.cov, sep="")
     if (sum(sign(eigen(p.var)$values) < 1) > 0)
       stop("`p.var' must be positive definite.")
     p.prec <- solve(p.var)
-  }
-  else if (p.var == Inf) {
-    p.imp <- TRUE
-    p.prec <- diag(0, n.cov)
-    if (verbose)
-      cat("Improper prior will be used for beta.\n\n")
   }
   else {
     p.var <- diag(p.var, n.cov)
@@ -115,7 +115,10 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
   keep <- thin + 1
   
   ## running the algorithm
-  n.par <- n.cov + n.dim*(n.dim+1)/2
+  if (latent)
+    n.par <- n.cov + n.dim*(n.dim+1)/2 + n.dim*n.obs
+  else
+    n.par <- n.cov + n.dim*(n.dim+1)/2
   if(verbose)
     cat("Starting Gibbs sampler...\n")
   # recoding NA into -1
@@ -126,17 +129,25 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
               as.double(p.scale*p.alpha0), as.double(X), as.integer(Y), 
               as.double(coef.start), as.double(cov.start), 
               as.integer(p.imp), as.integer(burnin), as.integer(keep), 
-              as.integer(verbose), as.integer(MoP),
-              pdStore = double(n.par*(ceiling((n.draws-burnin)/keep)+1)),
+              as.integer(verbose), as.integer(MoP), as.integer(latent),
+              pdStore = double(n.par*floor((n.draws-burnin)/keep)),
               PACKAGE="MNP")$pdStore 
-  param <- matrix(param, ncol=n.par,
-                  nrow=(ceiling((n.draws-burnin)/keep)+1), byrow=TRUE)
+  param <- matrix(param, ncol = n.par,
+                  nrow = floor((n.draws-burnin)/keep), byrow=TRUE)
+  if (latent) {
+    W <- array(as.vector(t(param[,(n.par-n.dim*n.obs+1):n.par])),
+               dim = c(n.dim, n.obs, floor((n.draws-burnin)/keep)),
+               dimnames = list(lev[-1], rownames(Y), NULL))
+    param <- param[,1:(n.par-n.dim*n.obs)]
+  }
+  else
+    W <- NULL
   colnames(param) <- c(coefnames, Signames)
 
   ##recoding -1 back into NA
   Y[Y==-1] <- NA
   ## returning the object
-  res <- list(param =param, x = X, y = Y, call = call, n.alt = p,
+  res <- list(param = param, x = X, y = Y, W = W, call = call, n.alt = p,
               p.mean = if(p.imp) NULL else p.mean, p.var = p.var,
               p.df = p.df, p.scale = p.scale, burnin = burnin, thin =
               thin) 

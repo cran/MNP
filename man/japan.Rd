@@ -3,7 +3,7 @@
 \alias{japan}
 \title{Voters' Preferences of Political Parties in Japan (1995)}
 \description{
-  This data set gives voters' preferences of political parties (Liberal
+  This dataset gives voters' preferences of political parties (Liberal
   Democratic Party (LDP), New Frontier Party (NFP), Sakigake (SKG), and
   Japanese Communist Party (JCP)) in Japan on the 0 (least preferred) - 100
   (most preferred) scale. It is based on the 1995 survey data of 418

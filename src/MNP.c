@@ -23,6 +23,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	       int *piKeep,
 	       int *verbose,  /* 1 if extra print is needed */ 
 	       int *piMoP,    /* 1 if Multinomial ordered Probit */
+	       int *latent,     /* 1 if W is stored */
 	       double *pdStore){
   
   /* paramerters from R */
@@ -40,9 +41,6 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
   double **X;            /* The covariates and outcome var */
   double **A0;           /* prior precision for beta */
   double **S;            /* The prior parameters for Sigma */
-
-  /* total number of parameters */
-  int n_par = n_cov+n_dim*(n_dim+1)/2; 
 
   /* model parameters */
   int **Y;                   /* The response variable */
@@ -66,7 +64,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
   int i, j, k, l, main_loop; /* used for loops */
 
   /* temporay storages */
-  int itemp, itempMax, itempMin, *ivtemp, itempS=1, itempP=ftrunc((double) n_gen/10); 
+  int itemp, itempMax, itempMin, *ivtemp, itempS = 0, itempP=ftrunc((double) n_gen/10); 
   double *vtemp;
   double **mtemp,**mtemp1,**mtemp2;
 
@@ -124,24 +122,14 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
     for (j = 0; j < n_dim; j++) S[j][k] = pdS[itemp++];
 
   itemp = 0;
-  for (j=0; j<n_cov;j++) {
+  for (j=0; j<n_cov;j++) 
     beta[j]=pdbeta[itemp++];
-    pdStore[j]=beta[j];
-  }
 
   itemp = 0;
   for (k = 0; k < n_dim; k++) 
     for (j = 0; j < n_dim; j++) 
       Sigma[j][k] = pdSigma[itemp++];
   dinv(Sigma,n_dim,SigInv); 
-
-  itemp = 0;
-  for (k = 0; k < n_dim; k++) 
-    for (j = 0; j < n_dim; j++) 
-      if(j<=k) {
-	pdStore[n_cov+itemp]=Sigma[j][k];
-	itemp++;
-      }
 
   /** add prior information as additional data points **/
   if(imp){
@@ -380,18 +368,16 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
     R_CheckUserInterrupt();
     if(main_loop > *piBurnin) {
       if(keep==*piKeep) {
-	itemp=0;
-	for(j=0;j<n_cov;j++) {
-	  pdStore[itempS*n_par+itemp]=beta[j];
-	  itemp++;
-	} 
+	for(j=0;j<n_cov;j++) 
+	  pdStore[itempS++]=beta[j];
 	for(j=0;j<n_dim;j++) 
 	  for(k=0;k<n_dim;k++) 
-	    if(j<=k) {
-	      pdStore[itempS*n_par+itemp]=Sigma[j][k];
-	      itemp++;
-	    }
-	itempS++;
+	    if(j<=k) 
+	      pdStore[itempS++]=Sigma[j][k];
+	if (*latent) 
+	  for (i=0;i<n_samp;i++) 
+	    for (j=0;j<n_dim;j++) 
+	      pdStore[itempS++]=W[i][j];
 	keep=1;
       }
       else
