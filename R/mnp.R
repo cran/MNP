@@ -44,18 +44,18 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
 
   ## checking the prior for beta
   p.imp <- FALSE 
-  if (p.var == Inf) {
-    p.imp <- TRUE
-    p.prec <- diag(0, n.cov)
-    if (verbose)
-      cat("Improper prior will be used for beta.\n\n")
-  }
-  else if (is.matrix(p.var)) {
+  if (is.matrix(p.var)) {
     if (ncol(p.var) != n.cov || nrow(p.var) != n.cov)
       stop("The dimension of `p.var' should be ", n.cov, " x ", n.cov, sep="")
     if (sum(sign(eigen(p.var)$values) < 1) > 0)
       stop("`p.var' must be positive definite.")
     p.prec <- solve(p.var)
+  }
+  else if (p.var == Inf) {
+    p.imp <- TRUE
+    p.prec <- diag(0, n.cov)
+    if (verbose)
+      cat("Improper prior will be used for beta.\n\n")
   }
   else {
     p.var <- diag(p.var, n.cov)

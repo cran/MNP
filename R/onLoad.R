@@ -2,6 +2,7 @@
   mylib <- dirname(system.file(package = "MNP"))
   title <- packageDescription("MNP", lib = mylib)$Title
   ver <- packageDescription("MNP", lib = mylib)$Version
-  cat(title, "\nVersion", ver, "\n")
+  url <- packageDescription("MNP", lib = mylib)$URL
+  cat(title, "\nVersion:", ver, "\nURL:", url, "\n")
 }
 

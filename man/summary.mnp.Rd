@@ -32,6 +32,7 @@
   \item{call}{The call from \code{mnp}.}
   \item{n.alt}{The total number of alternatives.}
   \item{n.obs}{The number of observations.}
+  \item{n.draws}{The number of Gibbs draws used for the summary.}
   \item{coef.table}{The summary of the posterior distribution of the
     coefficients. }
   \item{cov.table}{The summary of the posterior distribution of the
@@ -39,7 +40,8 @@
   This object can be printed by \code{print.summary.mnp}
 }
 
-\seealso{\code{mnp}}
+\seealso{\code{mnp}; MNP home page at
+  \url{http://www.princeton.edu/~kimai/research/MNP.html}}
 
 \author{
   Kosuke Imai, Department of Politics, Princeton University

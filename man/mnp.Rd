@@ -16,8 +16,8 @@
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
-        base = NULL, n.draws = 5000, p.var = "Inf",  p.df = n.dim+1, p.scale = 1,
-        coef.start = 0, cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
+    base = NULL, n.draws = 5000, p.var = "Inf",  p.df = n.dim+1, p.scale = 1,
+    coef.start = 0, cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
 }
 
 \arguments{
@@ -138,17 +138,17 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
 ## load the detergent data
 data(detergent)
 ## run the standard Multinomial Probit model with intercepts and the price
-res1 <- mnp(choice ~ 1, choiceX=list(Surf=Surf, Tide=Tide, Wisk=Wisk,
-                                     EraPlus=EraPlus, Solo=Solo, All=All),
-                cXnames=c("price"), data=detergent, n.draws=5000,
-                p.df=6, burnin=1000, thin=3, verbose=TRUE) 
+res1 <- mnp(choice ~ 1, choiceX = list(Surf=Surf, Tide=Tide, Wisk=Wisk,
+                                       EraPlus=EraPlus, Solo=Solo, All=All),
+            cXnames = "price", data = detergent, n.draws = 500, burnin = 100,
+            thin = 3, verbose = TRUE) 
 summary(res1)
 
 ## load the Japanese election data
 data(japan)
 ## run the Multinomial ordered Probit model
-res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age,
-            data = japan, n.draws=5000, verbose = TRUE)
+res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age, data = japan,
+            verbose = TRUE)
 summary(res2)
 }
 
