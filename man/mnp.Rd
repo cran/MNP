@@ -11,7 +11,7 @@
   with different choice sets for each observation, and complete or
   partial ordering of all the available alternatives. The computation
   uses the efficient marginal data augmentation algorithm that is
-  developed by Imai and van Dyk (2005).  }
+  developed by Imai and van Dyk (2005a).  }
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
@@ -140,6 +140,12 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
 }
 
 \examples{
+###
+### NOTE: this example is not fully analyzed. In particular, the
+### convergence has not been assessed. A full analysis of these data
+### sets appear in Imai and van Dyk (2005b).
+###
+
 ## load the detergent data
 data(detergent)
 ## run the standard multinomial probit model with intercepts and the price
@@ -190,10 +196,15 @@ predict(res2, newdata = japan[10,], type = "prob")
 }
 
 \references{
-  Imai, Kosuke and David A. van Dyk. (2005) \dQuote{A Bayesian Analysis of the
-  Multinomial Probit Model Using the Marginal Data Augmentation,}
-  \emph{Journal of Econometrics}, Vol. 124, No. 2 (February),
-  pp.311-334.
+  Imai, Kosuke and David A. van Dyk. (2005a) \dQuote{A Bayesian Analysis
+    of the Multinomial Probit Model Using the Marginal Data
+    Augmentation,} \emph{Journal of Econometrics}, Vol. 124, No. 2
+  (February), pp.311-334.
+
+  Imai, Kosuke and David A. van Dyk. (2005b) \dQuote{MNP: R Package for
+    Fitting the Multinomial Probit Models,} \emph{Working Paper,
+    Department of Politics, Princeton University}, available at
+  \url{http://www.princeton.edu/~kimai/research/MNP.html} 
 }
 
 \author{

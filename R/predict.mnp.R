@@ -1,4 +1,4 @@
-predict.mnp <- function(object, newdata = NULL,
+predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
                         type = c("prob", "choice", "order", "latent"),
                         verbose = FALSE, ...){
 
@@ -6,7 +6,10 @@ predict.mnp <- function(object, newdata = NULL,
     stop("Invalid input for `type'.")
       
   p <- object$n.alt
-  param <- object$param
+  if (is.null(newdraw))
+    param <- object$param
+  else
+    param <- newdraw
   n.cov <- ncol(param) - p*(p-1)/2
   n.draws <- nrow(param)
   coef <- param[,1:n.cov]

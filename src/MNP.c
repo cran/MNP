@@ -1,7 +1,6 @@
 /******************************************************************
   This file is a part of MNP: R Package for Estimating the 
-  Multinomial Probit Models by Kosuke Imai, Jordan R. Vance, and 
-  David A. van Dyk.
+  Multinomial Probit Models by Kosuke Imai and David A. van Dyk.
   Copyright: GPL version 2 or later.
 *******************************************************************/
 
@@ -148,17 +147,15 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
     }
   }
 
-  /** initialize W **/
+  /** starting values for W **/
   for(i=0;i<n_samp;i++) {
-    for(j=0;j<n_dim;j++) {
-      if(*piMoP) 
-	W[i][j]=(double)(Y[i][j]-Y[i][n_dim])/10;
-      else {
-	if(y[i]==(j+1))
-	  W[i][j]=0.1;
-	else
-	  W[i][j]=-0.1;
-      }
+    for(j=0;j<n_dim;j++){
+      Xbeta[i][j]=0;
+      for (k=0;k<n_cov;k++) Xbeta[i][j] += X[i*n_dim+j][k]*beta[k];
+      if(*piMoP) /* you DO need to worry about ordering for this */
+	W[i][j] = (double)(Y[i][j]-Y[i][n_dim])/(double) n_dim;
+      else /* you DON'T need to worry about ordering for this */
+	W[i][j] = Xbeta[i][j] + norm_rand();
     }
     W[i][n_dim]=0.0;
   }
@@ -203,7 +200,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
     }
 
     /** Truncated Multinomial Normal Sampling for W **/
-    if(*piMoP) { /* Multinomial ordered Probit */
+    if(*piMoP) { /* Multinomial Probit with Ordered Preferences */
       for(i=0;i<n_samp;i++){
 	for(j=0;j<n_dim;j++){
 	  Xbeta[i][j]=0;
@@ -248,8 +245,8 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	  if(Y[i][j]==-1) 
 	    W[i][j] = cmean + norm_rand()*sqrt(cvar);
 	  else {
-	    if(Y[i][j]==0) minw = cmean - 100*sqrt(cvar);
-	    if(Y[i][j]==maxy[i]) maxw = cmean + 100*sqrt(cvar);
+	    if(Y[i][j]==0) minw = cmean - 1000*sqrt(cvar);
+	    if(Y[i][j]==maxy[i]) maxw = cmean + 1000*sqrt(cvar);
 	    W[i][j]=TruncNorm(minw,maxw,cmean,cvar); 
 	  }
 	  /* printf("%14g\n", W[i][j]); */
@@ -258,7 +255,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	}
       }
     }
-    else { /* standard MNP */
+    else { /* standard multinomial probit */
       for(i=0;i<n_samp;i++){
 	for(j=0;j<n_dim;j++) {
 	  Xbeta[i][j]=0;
@@ -268,7 +265,8 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	  maxw=0.0; itemp=0; 
 	  for(k=0;k<n_dim;k++) {	  		  		  
 	    if(j!=k) {
-	      if(maxw<W[i][k]) maxw=W[i][k];
+	      maxw = fmax2(maxw, W[i][k]);
+	      /* if(maxw<W[i][k]) maxw=W[i][k]; */
 	      vtemp[itemp++]=W[i][k]-Xbeta[i][k];
 	    }
 	  }
@@ -281,9 +279,9 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	  if(y[i]==-1)
 	    W[i][j]=cmean+norm_rand()*sqrt(cvar);
 	  else if(y[i]==(j+1)) 
-	    W[i][j]=TruncNorm(maxw,cmean+100*sqrt(cvar),cmean,cvar); 
+	    W[i][j]=TruncNorm(maxw,cmean+1000*sqrt(cvar),cmean,cvar); 
 	  else
-	    W[i][j]=TruncNorm(cmean-100*sqrt(cvar),maxw,cmean,cvar);
+	    W[i][j]=TruncNorm(cmean-1000*sqrt(cvar),maxw,cmean,cvar);
 	  X[i*n_dim+j][n_cov]=W[i][j];
 	  X[i*n_dim+j][n_cov]*=sqrt(alpha2);
 	}
