@@ -13,7 +13,7 @@
 
 \usage{data(japan)}
 
-\format{A matrix containing the following 7 variables for 418 observations.
+\format{A data frame containing the following 7 variables for 418 observations.
   
   \tabular{lll}{
     LDP \tab preference for Liberal Democratic Party \tab 0 - 100 \cr

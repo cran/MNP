@@ -8,7 +8,7 @@
 }
 \usage{data(detergent)}
 
-\format{A matrix containing the following 7 variables and 2657 observations.
+\format{A data frame containing the following 7 variables and 2657 observations.
 
   \tabular{lll}{
     choice \tab factor \tab a brand chosen by each household\cr

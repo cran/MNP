@@ -10,6 +10,7 @@ print.summary.mnp <- function(x, digits = max(3, getOption("digits") - 3), ...) 
   cat("\nCovariances:\n")
   printCoefmat(x$cov.table, digits = digits, na.print = "NA", ...)
   
+  cat("\nBase category:", x$base)  
   cat("\nNumber of alternatives:", x$n.alt)
   cat("\nNumber of observations:", x$n.obs)
   cat("\nNumber of Gibbs draws:", x$n.draws)

@@ -122,7 +122,8 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
   if(verbose)
     cat("Starting Gibbs sampler...\n")
   # recoding NA into -1
-  Y[is.na(Y)] <- -1 
+  Y[is.na(Y)] <- -1
+
   param <- .C("cMNPgibbs", as.integer(n.dim),
               as.integer(n.cov), as.integer(n.obs), as.integer(n.draws),
               as.double(p.mean), as.double(p.prec), as.integer(p.df),
@@ -139,18 +140,19 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
                dim = c(n.dim, n.obs, floor((n.draws-burnin)/keep)),
                dimnames = list(lev[-1], rownames(Y), NULL))
     param <- param[,1:(n.par-n.dim*n.obs)]
-  }
+    }
   else
     W <- NULL
   colnames(param) <- c(coefnames, Signames)
-
+    
   ##recoding -1 back into NA
   Y[Y==-1] <- NA
+
   ## returning the object
-  res <- list(param = param, x = X, y = Y, W = W, call = call, n.alt = p,
-              p.mean = if(p.imp) NULL else p.mean, p.var = p.var,
-              p.df = p.df, p.scale = p.scale, burnin = burnin, thin =
-              thin) 
+  res <- list(param = param, x = X, y = Y, w = W, call = call, alt = lev,
+              n.alt = p, base = base, p.mean = if(p.imp) NULL else p.mean,
+              p.var = p.var,
+              p.df = p.df, p.scale = p.scale, burnin = burnin, thin = thin) 
   class(res) <- "mnp"
   return(res)
 }

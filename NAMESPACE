@@ -3,5 +3,6 @@ useDynLib(MNP)
 export(mnp, summary.mnp, print.summary.mnp)
 
 S3method(summary, mnp)
+S3method(predict, mnp)
 S3method(print, mnp)
 S3method(print, summary.mnp)

@@ -147,15 +147,21 @@ data(detergent)
 res1 <- mnp(choice ~ 1, choiceX = list(Surf=Surf, Tide=Tide, Wisk=Wisk,
                                        EraPlus=EraPlus, Solo=Solo, All=All),
             cXnames = "price", data = detergent, n.draws = 500, burnin = 100,
-            thin = 3, verbose = TRUE) 
+            thin = 3, verbose = TRUE)
+## summarize the results
 summary(res1)
+## calculate the predicted probabilities for the first 5 observations
+predict(res1, newdata = detergent[1:3,], type="prob", verbose = TRUE)
 
 ## load the Japanese election data
 data(japan)
 ## run the multinomial ordered probit model
 res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age, data = japan,
             verbose = TRUE)
+## summarize the results
 summary(res2)
+## calculate the predicted probabilities for the 10th observation
+predict(res2, newdata = japan[10,], type = "prob")
 }
 
 \value{
@@ -171,8 +177,10 @@ summary(res2)
     first dimension represents the alternatives, and the second
     dimension indexes the observations. The third dimension represents
     the Gibbs draws. Note that the latent variable for the base category
-    is set to 0, and therefore omitted from the output.} 
+    is set to 0, and therefore omitted from the output.}
+  \item{alt}{The names of alternatives.}
   \item{n.alt}{The total number of alternatives.}
+  \item{base}{The base category used for fitting.}
   \item{p.var}{The prior variance for the coefficients.}
   \item{p.df}{The prior degrees of freedom parameter for the covariance matrix.}
   \item{p.scale}{The prior scale matrix for the covariance matrix.}

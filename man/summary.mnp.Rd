@@ -31,6 +31,7 @@
   containing the following elements:
   \item{call}{The call from \code{mnp}.}
   \item{n.alt}{The total number of alternatives.}
+  \item{base}{The base category used for fitting.}
   \item{n.obs}{The number of observations.}
   \item{n.draws}{The number of Gibbs draws used for the summary.}
   \item{coef.table}{The summary of the posterior distribution of the
