@@ -9,6 +9,7 @@
 #include <stdio.h>      
 #include <math.h>
 #include <Rmath.h>
+#include <R_ext/Utils.h>
 #include "vector.h"
 #include "subroutines.h"
 #include "rand.h"
@@ -376,6 +377,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	W[i][j]=X[i*n_dim+j][n_cov]/sqrt(alpha2);
   
     /* print Gibbs draws for all the schmes! */
+    R_CheckUserInterrupt();
     if(main_loop > *piBurnin) {
       if(keep==*piKeep) {
 	itemp=0;
@@ -399,7 +401,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
       if(main_loop == itempP) {
 	Rprintf("%3d percent done.\n", progress*10);
 	itempP+=ftrunc((double) n_gen/10); progress++;
-	R_FlushConsole(); /* R_ProcessEvents(); */
+	R_FlushConsole(); 
       }
     }
   } /* end of Gibbs sampler */
