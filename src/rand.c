@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <Rmath.h>
+#include <R_ext/Utils.h>
+#include <R.h>
 #include "vector.h"
 #include "subroutines.h"
 #include "rand.h"
@@ -23,7 +25,7 @@ double dMVN(
 	int give_log){          /* 1 if log_scale 0 otherwise */
   
   int j,k;
-  double value=0;
+  double value=0.0;
   double **SIG_INV = doubleMatrix(dim, dim);
   
   dinv(SIGMA, dim, SIG_INV);
@@ -33,7 +35,7 @@ double dMVN(
     value+=(Y[j]-MEAN[j])*(Y[j]-MEAN[j])*SIG_INV[j][j];
   }
 
-  value=-0.5*value-0.5*dim*log(2*M_PI)-0.5*log(ddet(SIGMA, dim));
+  value=-0.5*value-0.5*dim*log(2*M_PI)-0.5*ddet(SIGMA, dim, 1);
 
   FreeMatrix(SIG_INV, dim);
 
@@ -48,7 +50,7 @@ double dMVN(
 /* Sample from a univariate truncated Normal distribution 
    (truncated both from above and below): 
    if the range is too far from mu, it uses standard rejection
-   sampling algorithm with exponential envleope function. */ 
+   sampling algorithm with exponential envelope function. */ 
 double TruncNorm(
 		 double lb,  /* lower bound */ 
 		 double ub,  /* upper bound */
@@ -61,10 +63,8 @@ double TruncNorm(
   
   stlb = (lb-mu)/sqrt(var);  /* standardized lower bound */
   stub = (ub-mu)/sqrt(var);  /* standardized upper bound */
-  if(stlb >= stub){
-    printf("error in TurncNorm: lower bound is greater than upper bound\n");
-    exit(1);
-  }
+  if(stlb >= stub)
+    error("TurncNorm: lower bound is greater than upper bound\n");
   if(stub<=-2){
     flag=1;
     temp=stub;

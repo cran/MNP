@@ -8,15 +8,15 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+#include <R_ext/Utils.h>
+#include <R.h>
 
 int* intArray(int num) {
   int *iArray = (int *)malloc(num * sizeof(int));
   if (iArray)
     return iArray;
-  else {
-    fprintf(stderr, "Out of memory error in intArray\n");
-    exit(-1);
-  }
+  else 
+    error("Out of memory error in intArray\n");
 }
 
 int** intMatrix(int row, int col) {
@@ -25,27 +25,21 @@ int** intMatrix(int row, int col) {
   if (iMatrix) {
     for (i = 0; i < row; i++) {
       iMatrix[i] = (int *)malloc(col *  sizeof(int));
-      if (!iMatrix[i]) {
-	fprintf(stderr, "Out of memory error in intMatrix\n");
-	exit(-1);
-      }
+      if (!iMatrix[i]) 
+	error("Out of memory error in intMatrix\n");
     }
     return iMatrix;
   }
-  else {
-    fprintf(stderr, "Out of memory error in intMatrix\n");
-    exit(-1);
-  }
+  else 
+    error("Out of memory error in intMatrix\n");
 }
 
 double* doubleArray(int num) {
   double *dArray = (double *)malloc(num * sizeof(double));
   if (dArray)
     return dArray;
-  else {
-    fprintf(stderr, "Out of memory error in doubleArray\n");
-    exit(-1);
-  }
+  else
+    error("Out of memory error in doubleArray\n");
 }
 
 double** doubleMatrix(int row, int col) {
@@ -54,17 +48,13 @@ double** doubleMatrix(int row, int col) {
   if (dMatrix) {
     for (i = 0; i < row; i++) {
       dMatrix[i] = (double *)malloc((size_t)(col * sizeof(double)));
-      if (!dMatrix[i]) {
-	fprintf(stderr, "Out of memory error in doubleMatrix\n");
-	exit(-1);
-      }
+      if (!dMatrix[i])
+	error("Out of memory error in doubleMatrix\n");
     }
     return dMatrix;
   }
-  else {
-    fprintf(stderr, "Out of memory error in doubleMatrix\n");
-    exit(-1);
-  }
+  else
+    error("Out of memory error in doubleMatrix\n");
 }
 
 double*** doubleMatrix3D(int x, int y, int z) {
@@ -75,20 +65,16 @@ double*** doubleMatrix3D(int x, int y, int z) {
       dM3[i] = doubleMatrix(y, z);
     return dM3;
   }
-  else {
-    fprintf(stderr, "Out of memory error in doubleMatrix3D\n");
-    exit(-1);
-  }
+  else 
+    error("Out of memory error in doubleMatrix3D\n");
 }
 
 long* longArray(int num) {
   long *lArray = (long *)malloc(num * sizeof(long));
   if (lArray)
     return lArray;
-  else {
-    fprintf(stderr, "Out of memory error in longArray\n");
-    exit(-1);
-  }
+  else 
+    error("Out of memory error in longArray\n");
 }
 
 void FreeMatrix(double **Matrix, int row) {

@@ -185,7 +185,7 @@ summary(res2)
   Imai, Kosuke and David A. van Dyk. (2005) \dQuote{A Bayesian Analysis of the
   Multinomial Probit Model Using the Marginal Data Augmentation,}
   \emph{Journal of Econometrics}, Vol. 124, No. 2 (February),
-  pp.311-344.
+  pp.311-334.
 }
 
 \author{
