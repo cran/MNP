@@ -1,6 +1,6 @@
 Package: MNP
-Version: 1.0-2
-Date: 2004-06-29
+Version: 1.0-3
+Date: 2004-06-30
 Title: MNP: R Package for Fitting the Multinomial Probit Models
 Author: Kosuke Imai <kimai@princeton.edu>, 
         Jordan Vance<jvance@princeton.edu>, 
@@ -16,4 +16,4 @@ Description: MNP is a publicly available R package that fits the
   is developed by Imai and van Dyk (2004).
 License: GPL (version 2 or later)
 URL: http://www.princeton.edu/~kimai/
-Packaged: Tue Jun 29 15:00:10 2004; kimai
+Packaged: Wed Jun 30 13:02:07 2004; kimai

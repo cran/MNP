@@ -22,13 +22,12 @@ xmatrix.mnp <- function(formula, data = sys.parent(), choiceX=NULL,
   p <- n.dim + 1
   n.obs <- nrow(X)
   n.cov <- ncol(X)
-
+  
   ## expanding X
   Xcnames <- colnames(X)
-  allvnames <- NULL
+  allvnames <- Xnew <- NULL
   for (i in 1:n.cov) {
-    Xv <- X[, pmatch(Xcnames[i], colnames(X))]
-    X <- X[, -pmatch(Xcnames[i], colnames(X))]
+    Xv <- X[, Xcnames[i]]
     Xtmp <- varnames <- NULL
     for (j in 1:n.dim) {
       allvnames <- c(allvnames, paste(Xcnames[i], ":", if(MoP)
@@ -41,7 +40,7 @@ xmatrix.mnp <- function(formula, data = sys.parent(), choiceX=NULL,
       Xtmp <- cbind(Xtmp, tmp)
     }
     colnames(Xtmp) <- varnames
-    X <- cbind(X, Xtmp)
+    Xnew <- cbind(Xnew, Xtmp)
   }
 
   ## checking and adding choice-specific variables
@@ -70,11 +69,11 @@ xmatrix.mnp <- function(formula, data = sys.parent(), choiceX=NULL,
         if (!is.null(xbase)) 
           tmp <- tmp - xbase[,i]
         colnames(tmp) <- paste(cXnames[i], ":", if(MoP) lev[j] else lev[j+1], sep="") 
-        X <- cbind(X, tmp)
+        Xnew <- cbind(Xnew, tmp)
       }
   }
   if(extra)
-    return(list(X=X, coefnames=c(allvnames, cXnames)))
+    return(list(X=Xnew, coefnames=c(allvnames, cXnames)))
   else
-    return(X)
+    return(Xnew)
 }
