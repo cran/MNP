@@ -29,7 +29,7 @@ ymatrix.mnp <- function(data, base=NULL, extra=FALSE, verbose=verbose) {
       lev <- lev[counts > 0]
     }
     p <- length(lev)
-    Y <- unclass(Y) - 1
+    Y <- as.matrix(unclass(Y)) - 1
     MoP <- FALSE
   }
   if(extra)

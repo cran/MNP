@@ -38,10 +38,28 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
   X <- tmp$X
   coefnames <- tmp$coefnames
   n.cov <- ncol(X) / n.dim
+  
+  ## listwise deletion for X
+  na.ind <- apply(is.na(X), 1, sum)
+  if (ncol(Y) == 1)
+    na.ind <- na.ind + is.na(Y)
+  Y <- Y[na.ind==0,]
+  X <- X[na.ind==0,]
   n.obs <- nrow(X)
-  if (verbose)
+  
+  if (verbose) {
     cat("The dimension of beta is ", n.cov, ".\n\n", sep="")
-
+    cat("The number of observations is ", n.obs, ".\n\n", sep="")
+    if (sum(na.ind>0)>0) {
+      if (sum(na.ind>0)==1)
+        cat("The observation ", (1:length(na.ind))[na.ind>0], " is dropped due to missing values.\n\n", sep="")
+      else {
+        cat("The following ", sum(na.ind>0), " observations are dropped due to missing values:\n", sep="")
+        cat((1:length(na.ind))[na.ind>0], "\n\n")
+      }
+    }
+  } 
+  
   ## checking the prior for beta
   p.imp <- FALSE 
   if (p.var == Inf) {

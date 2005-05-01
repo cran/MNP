@@ -25,13 +25,21 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
                      cXnames = eval(call$cXnames),
                      base = object$base, n.dim = p-1,
                      lev = object$alt, MoP = is.matrix(object$y),
-                     verbose = FALSE, extra = FALSE)    
+                     verbose = FALSE, extra = FALSE)
+    if (nrow(x) > 1) 
+      x <- as.matrix(x[apply(is.na(x), 1, sum)==0,])
+    else if (sum(is.na(x))>0)
+      stop("Invalid input for `newdata'.")
   }
-
+  
   n.obs <- nrow(x)
-  if (verbose)
-    cat("There are", n.obs, "observations to predict. Please wait...\n")
-
+  if (verbose) {
+    if (n.obs == 1)
+      cat("There is one observation to predict. Please wait...\n")
+    else
+      cat("There are", n.obs, "observations to predict. Please wait...\n")
+  }
+  
   alt <- object$alt
   if (object$base != alt[1]) 
     alt <- c(object$base, alt[1:(length(alt)-1)])
