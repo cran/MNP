@@ -109,7 +109,7 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   names of the response variable, and \code{z1} and \code{z2} are each
   vectors of length \eqn{n} that record the values of the two
   choice-specific covariates for each individual for choice A, likewise
-  for \code{z3}, ..., \code{z6}. The corresponding variable names via
+  for \code{z3}, \eqn{\ldots}, \code{z6}. The corresponding variable names via
   \code{cXnames=c("price", "quantity")}
   need to be specified, where \code{price} refers to the coefficient
   name for \code{z1}, \code{z3}, and \code{z5}, and \code{quantity}
@@ -162,7 +162,7 @@ predict(res1, newdata = detergent[1:3,], type="prob", verbose = TRUE)
 ## load the Japanese election data
 data(japan)
 ## run the multinomial probit model with ordered preferences
-res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ sex + education + age, data = japan,
+res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ gender + education + age, data = japan,
             verbose = TRUE)
 ## summarize the results
 summary(res2)
@@ -202,9 +202,8 @@ predict(res2, newdata = japan[10,], type = "prob")
   (February), pp.311-334.
 
   Imai, Kosuke and David A. van Dyk. (2005b) \dQuote{MNP: R Package for
-    Fitting the Multinomial Probit Models,} \emph{Working Paper,
-    Department of Politics, Princeton University}, available at
-  \url{http://www.princeton.edu/~kimai/research/MNP.html} 
+    Fitting the Multinomial Probit Models,} \emph{Journal of Statistical
+  Software}, Vol. 14, No. 2.
 }
 
 \author{
