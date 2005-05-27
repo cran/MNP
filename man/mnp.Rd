@@ -203,7 +203,7 @@ predict(res2, newdata = japan[10,], type = "prob")
 
   Imai, Kosuke and David A. van Dyk. (2005b) \dQuote{MNP: R Package for
     Fitting the Multinomial Probit Models,} \emph{Journal of Statistical
-  Software}, Vol. 14, No. 3 (May), pp.1-31.
+  Software}, Vol. 14, No. 3 (May), pp.1-32.
 }
 
 \author{
@@ -214,7 +214,8 @@ predict(res2, newdata = japan[10,], type = "prob")
   \url{http://www.ics.uci.edu/~dvd}.  
 }
 
-\seealso{\code{predict.mnp}, \code{summary.mnp}; MNP home page at
+\seealso{\code{coef.mnp}, \code{cov.mnp}, \code{predict.mnp},
+\code{summary.mnp}; MNP home page at
   \url{http://www.princeton.edu/~kimai/research/MNP.html}}
 
 \keyword{models}

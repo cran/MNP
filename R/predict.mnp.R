@@ -10,9 +10,9 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
     param <- object$param
   else
     param <- newdraw
-  n.cov <- ncol(param) - p*(p-1)/2
+  coef <- coef(object)
+  n.cov <- ncol(coef)
   n.draws <- nrow(param)
-  coef <- param[,1:n.cov]
   cov <- param[,(n.cov+1):ncol(param)]
   
   ## get X matrix ready
@@ -49,18 +49,11 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
                                                NULL, 1:n.draws))
   tmp <- floor(n.draws/10)
   inc <- 1
+  Sigma <- cov.mnp(object)
   for (i in 1:n.draws) {
-    Sigma <- matrix(0, p-1, p-1)
-    count <- 1
-    for (j in 1:(p-1)) {
-      Sigma[j,j:(p-1)] <- cov[i,count:(count+p-j-1)]
-      count <- count + p - j
-    }
-    diag(Sigma) <- diag(Sigma)/2
-    Sigma <- Sigma + t(Sigma)
     for (j in 1:n.obs) 
       W[,j,i] <- matrix(x[j,], ncol=n.cov) %*% matrix(coef[i,]) +
-        mvrnorm(1, mu = rep(0, p-1), Sigma = Sigma)
+        mvrnorm(1, mu = rep(0, p-1), Sigma = Sigma[,,i])
     if (i == inc*tmp & verbose) {
       cat("", inc*10, "percent done.\n")
       inc <- inc + 1

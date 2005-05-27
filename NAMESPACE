@@ -1,7 +1,8 @@
 useDynLib(MNP)
 
-export(mnp, summary.mnp, print.summary.mnp)
+export(mnp, coef.mnp, cov.mnp, predict.mnp, summary.mnp, print.summary.mnp)
 
+S3method(coef, mnp)
 S3method(summary, mnp)
 S3method(predict, mnp)
 S3method(print, mnp)
