@@ -233,9 +233,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	  for (k=0;k<n_dim;k++) 
 	    if(j!=k) vtemp[itemp++]=W[i][k]-Xbeta[i][k];
 	  /* conditional mean and variance */
-	  cmean=0.0;
-	  for(k=0;k<n_cov;k++) 
-	    cmean+=X[i*n_dim+j][k]*beta[k];
+	  cmean=Xbeta[i][j];
 	  cvar=1/PerSig[j][n_dim-1][n_dim-1];
 	  for(k=0;k<(n_dim-1);k++) 
 	    cmean-=PerSig[j][n_dim-1][k]*vtemp[k]*cvar;
