@@ -35,7 +35,7 @@
 }
 
 \seealso{\code{mnp}, \code{cov.mnp}; MNP home page at
-  \url{http://www.princeton.edu/~kimai/research/MNP.html}}
+  \url{http://imai.princeton.edu/research/MNP.html}}
 
 \author{
   Kosuke Imai, Department of Politics, Princeton University

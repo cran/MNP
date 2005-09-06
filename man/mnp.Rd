@@ -15,9 +15,9 @@
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
-    base = NULL, latent = FALSE, n.draws = 5000, p.var = "Inf",
-    p.df = n.dim+1, p.scale = 1, coef.start = 0, cov.start = 1,
-    burnin = 0, thin = 0, verbose = FALSE) 
+    base = NULL, latent = FALSE, invcdf = FALSE, n.draws = 5000,
+    p.var = "Inf", p.df = n.dim+1, p.scale = 1, coef.start = 0,
+    cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
 }
 
 \arguments{
@@ -47,6 +47,10 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   \item{latent}{logical. If \code{TRUE}, then the latent variable W will
     be returned. See Imai and van Dyk (2005) for the notation. The
     default is \code{FALSE}.
+  }
+  \item{invcdf}{logical. If \code{TRUE}, then the inverse cdf method is
+    used for truncated normal sampling. If \code{FALSE}, then the
+    rejection sampling method is used. The default is \code{FALSE}.
   }
   \item{n.draws}{A positive integer. The number of MCMC draws. The
     default is \code{5000}.
@@ -187,6 +191,7 @@ predict(res2, newdata = japan[10,], type = "prob")
   \item{alt}{The names of alternatives.}
   \item{n.alt}{The total number of alternatives.}
   \item{base}{The base category used for fitting.}
+  \item{invcdf}{The value of \code{invcdf}.}
   \item{p.var}{The prior variance for the coefficients.}
   \item{p.df}{The prior degrees of freedom parameter for the covariance matrix.}
   \item{p.scale}{The prior scale matrix for the covariance matrix.}
@@ -208,7 +213,7 @@ predict(res2, newdata = japan[10,], type = "prob")
 
 \author{
   Kosuke Imai, Department of Politics, Princeton University
-  \email{kimai@Princeton.Edu}, \url{http://www.princeton.edu/~kimai};
+  \email{kimai@Princeton.Edu}, \url{http://imai.princeton.edu};
   Jordan R. Vance, Princeton University; David A. van Dyk, Department of
   Statistics, University of California, Irvine \email{dvd@uci.edu},
   \url{http://www.ics.uci.edu/~dvd}.  
@@ -216,7 +221,7 @@ predict(res2, newdata = japan[10,], type = "prob")
 
 \seealso{\code{coef.mnp}, \code{cov.mnp}, \code{predict.mnp},
 \code{summary.mnp}; MNP home page at
-  \url{http://www.princeton.edu/~kimai/research/MNP.html}}
+  \url{http://imai.princeton.edu/research/MNP.html}}
 
 \keyword{models}
 

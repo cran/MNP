@@ -18,11 +18,12 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	       double *pdA0, int *piNu0, double *pdS, double *pdX, 
 	       int *y,        /* response variable: -1 for missing */
 	       double *pdbeta, double *pdSigma, int *piImp, 
+	       int *invcdf,   /* use inverse cdf for TruncNorm? */
 	       int *piBurnin, /* the number of burnin */
 	       int *piKeep,
 	       int *verbose,  /* 1 if extra print is needed */ 
 	       int *piMoP,    /* 1 if Multinomial ordered Probit */
-	       int *latent,     /* 1 if W is stored */
+	       int *latent,   /* 1 if W is stored */
 	       double *pdStore){
   
   /* paramerters from R */
@@ -245,7 +246,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	  else {
 	    if(Y[i][j]==0) minw = cmean - 1000*sqrt(cvar);
 	    if(Y[i][j]==maxy[i]) maxw = cmean + 1000*sqrt(cvar);
-	    W[i][j]=TruncNorm(minw,maxw,cmean,cvar); 
+	    W[i][j]=TruncNorm(minw,maxw,cmean,cvar,*invcdf); 
 	  }
 	  /* printf("%14g\n", W[i][j]); */
 	  X[i*n_dim+j][n_cov]=W[i][j];
@@ -277,9 +278,9 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	  if(y[i]==-1)
 	    W[i][j]=cmean+norm_rand()*sqrt(cvar);
 	  else if(y[i]==(j+1)) 
-	    W[i][j]=TruncNorm(maxw,cmean+1000*sqrt(cvar),cmean,cvar); 
+	    W[i][j]=TruncNorm(maxw,cmean+1000*sqrt(cvar),cmean,cvar,*invcdf); 
 	  else
-	    W[i][j]=TruncNorm(cmean-1000*sqrt(cvar),maxw,cmean,cvar);
+	    W[i][j]=TruncNorm(cmean-1000*sqrt(cvar),maxw,cmean,cvar,*invcdf);
 	  X[i*n_dim+j][n_cov]=W[i][j];
 	  X[i*n_dim+j][n_cov]*=sqrt(alpha2);
 	}

@@ -1,12 +1,12 @@
 mnp <- function(formula, data = parent.frame(), choiceX = NULL,
                 cXnames = NULL, base = NULL, latent = FALSE,
-                n.draws = 5000, p.var = "Inf", p.df = n.dim+1,
-                p.scale = 1, coef.start = 0, cov.start = 1,
-                burnin = 0, thin = 0, verbose = FALSE) {   
+                invcdf = FALSE, n.draws = 5000, p.var = "Inf",
+                p.df = n.dim+1, p.scale = 1, coef.start = 0,
+                cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) {   
   call <- match.call()
   mf <- match.call(expand = FALSE)
   mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$latent <-
-    mf$p.var <- mf$p.df <- mf$p.scale <- mf$coef.start <-
+    mf$p.var <- mf$p.df <- mf$p.scale <- mf$coef.start <- mf$invcdf <-
       mf$cov.start <- mf$verbose <- mf$burnin <- mf$thin <- NULL   
   mf[[1]] <- as.name("model.frame")
   mf$na.action <- 'na.pass'
@@ -147,7 +147,8 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
               as.double(p.mean), as.double(p.prec), as.integer(p.df),
               as.double(p.scale*p.alpha0), as.double(X), as.integer(Y), 
               as.double(coef.start), as.double(cov.start), 
-              as.integer(p.imp), as.integer(burnin), as.integer(keep), 
+              as.integer(p.imp), as.integer(invcdf),
+              as.integer(burnin), as.integer(keep), 
               as.integer(verbose), as.integer(MoP), as.integer(latent),
               pdStore = double(n.par*floor((n.draws-burnin)/keep)),
               PACKAGE="MNP")$pdStore 
@@ -168,8 +169,8 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
 
   ## returning the object
   res <- list(param = param, x = X, y = Y, w = W, call = call, alt = lev,
-              n.alt = p, base = base, p.mean = if(p.imp) NULL else p.mean,
-              p.var = p.var,
+              n.alt = p, base = base, invcdf = invcdf,
+              p.mean = if(p.imp) NULL else p.mean, p.var = p.var, 
               p.df = p.df, p.scale = p.scale, burnin = burnin, thin = thin) 
   class(res) <- "mnp"
   return(res)

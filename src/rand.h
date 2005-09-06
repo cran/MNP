@@ -5,7 +5,7 @@
   Copyright: GPL version 2 or later.
 *******************************************************************/
 
-double TruncNorm(double lb, double ub, double mu, double var);
+double TruncNorm(double lb, double ub, double mu, double var, int invcdf);
 void rMVN(double *Sample, double *mean, double **inv_Var, int size);
 void rWish(double **Sample, double **S, int df, int size);
 
