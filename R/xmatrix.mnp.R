@@ -24,25 +24,27 @@ xmatrix.mnp <- function(formula, data = parent.frame(), choiceX=NULL,
   n.cov <- ncol(X)
   
   ## expanding X
-  Xcnames <- colnames(X)
   allvnames <- Xnew <- NULL
-  for (i in 1:n.cov) {
-    Xv <- X[, Xcnames[i]]
-    Xtmp <- varnames <- NULL
-    for (j in 1:n.dim) {
-      allvnames <- c(allvnames, paste(Xcnames[i], ":", if(MoP)
-                                      lev[j] else lev[j+1], sep=""))
-      for (k in 1:n.dim)
-        varnames <- c(varnames, paste(Xcnames[i], ":", if(MoP) lev[j]
-        else lev[j+1], sep=""))
-      tmp <- matrix(0, nrow = n.obs, ncol = n.dim)
-      tmp[, j] <- Xv
-      Xtmp <- cbind(Xtmp, tmp)
+  if (ncol(X) > 0) {
+    Xcnames <- colnames(X)
+    for (i in 1:n.cov) {
+      Xv <- X[, Xcnames[i]]
+      Xtmp <- varnames <- NULL
+      for (j in 1:n.dim) {
+        allvnames <- c(allvnames, paste(Xcnames[i], ":", if(MoP)
+                                        lev[j] else lev[j+1], sep=""))
+        for (k in 1:n.dim)
+          varnames <- c(varnames, paste(Xcnames[i], ":", if(MoP) lev[j]
+          else lev[j+1], sep=""))
+        tmp <- matrix(0, nrow = n.obs, ncol = n.dim)
+        tmp[, j] <- Xv
+        Xtmp <- cbind(Xtmp, tmp)
+      }
+      colnames(Xtmp) <- varnames
+      Xnew <- cbind(Xnew, Xtmp)
     }
-    colnames(Xtmp) <- varnames
-    Xnew <- cbind(Xnew, Xtmp)
   }
-
+  
   ## checking and adding choice-specific variables
   if (!is.null(choiceX)) {
     cX <- eval(choiceX, data)
