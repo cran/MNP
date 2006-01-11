@@ -11,8 +11,9 @@ summary.mnp <- function(object, CI=c(2.5, 97.5),...){
                              paste(max(CI), "%", sep=""))
   rownames(param.table) <- colnames(param)
   
-  ans <- list(call=object$call, base = object$base, n.alt=p, n.obs=if(is.matrix(object$y))
-              nrow(object$y) else length(object$y), n.draws = n.draws,
+  ans <- list(call = object$call, base = object$base, n.alt=p,
+              n.obs = if(is.matrix(object$y)) nrow(object$y) else length(object$y),
+              n.param = ncol(param)-1, n.draws = n.draws,
               coef.table= if(n.cov > 1) param.table[1:n.cov,]
               else matrix(param.table[1,], nrow=1,
                           dimnames=list(rownames(param.table)[1], colnames(param.table))),
