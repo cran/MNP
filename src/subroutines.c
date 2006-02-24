@@ -9,8 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <R_ext/Utils.h>
+#include <Rmath.h>
 #include <R.h> 
+#include <R_ext/Lapack.h>
 #include "vector.h"
 #include "rand.h"
 

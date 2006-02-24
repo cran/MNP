@@ -4,11 +4,13 @@
   Copyright: GPL version 2 or later.
 *******************************************************************/
 
+#include <string.h>
 #include <stddef.h>
 #include <stdio.h>      
 #include <math.h>
 #include <Rmath.h>
-#include <R_ext/Utils.h>
+#include <Rinterface.h>
+#include <R.h>
 #include "vector.h"
 #include "subroutines.h"
 #include "rand.h"
