@@ -11,7 +11,8 @@
   with different choice sets for each observation, and complete or
   partial ordering of all the available alternatives. The computation
   uses the efficient marginal data augmentation algorithm that is
-  developed by Imai and van Dyk (2005a).  }
+  developed by Imai and van Dyk (2005a).
+}
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
@@ -214,9 +215,8 @@ predict(res2, newdata = japan[10,], type = "prob")
 \author{
   Kosuke Imai, Department of Politics, Princeton University
   \email{kimai@Princeton.Edu}, \url{http://imai.princeton.edu};
-  Jordan R. Vance, Princeton University; David A. van Dyk, Department of
-  Statistics, University of California, Irvine \email{dvd@uci.edu},
-  \url{http://www.ics.uci.edu/~dvd}.  
+  David A. van Dyk, Department of Statistics, University of California,
+Irvine \email{dvd@uci.edu}, \url{http://www.ics.uci.edu/~dvd}.  
 }
 
 \seealso{\code{coef.mnp}, \code{cov.mnp}, \code{predict.mnp},
