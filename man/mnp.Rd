@@ -172,7 +172,7 @@ res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ gender + education + age, data = japan,
 ## summarize the results
 summary(res2)
 ## calculate the predicted probabilities for the 10th observation
-predict(res2, newdata = japan[10,], type = "prob")
+predict(res2, newdata = japan[10,], type = "prob", verbose = TRUE)
 }
 
 \value{

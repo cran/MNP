@@ -1,4 +1,4 @@
-predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
+predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
                         type = c("prob", "choice", "order", "latent"),
                         verbose = FALSE, ...){
 
@@ -45,15 +45,15 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
     alt <- c(object$base, alt[1:(length(alt)-1)])
   
   ## computing W
-  W <- array(NA, dim=c(p-1, n.obs, n.draws), dimnames=c(alt[2:p],
-                                               NULL, 1:n.draws))
+  W <- array(NA, dim=c(p-1, n.obs, n.draws, moredraw),
+             dimnames=c(alt[2:p], NULL, 1:n.draws, 1:moredraw))
   tmp <- floor(n.draws/10)
   inc <- 1
   Sigma <- cov.mnp(object)
   for (i in 1:n.draws) {
     for (j in 1:n.obs) 
-      W[,j,i] <- matrix(x[j,], ncol=n.cov) %*% matrix(coef[i,]) +
-        mvrnorm(1, mu = rep(0, p-1), Sigma = Sigma[,,i])
+      W[,j,i,] <- matrix(x[j,], ncol=n.cov) %*% matrix(coef[i,]) +
+        mvrnorm(moredraw, mu = rep(0, p-1), Sigma = Sigma[,,i])
     if (i == inc*tmp & verbose) {
       cat("", inc*10, "percent done.\n")
       inc <- inc + 1
@@ -66,12 +66,16 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
     ans$w <- NULL
 
   ## computing Y
-  Y <- matrix(NA, nrow = n.obs, ncol = n.draws, dimnames=list(NULL, 1:n.draws))
-  O <- array(NA, dim=c(p, n.obs, n.draws), dimnames=list(alt, NULL, 1:n.draws))
+  Y <- array(NA, dim = c(n.obs, n.draws, moredraw),
+             dimnames=list(NULL, 1:n.draws, 1:moredraw))
+  O <- array(NA, dim=c(p, n.obs, n.draws, 1:moredraw),
+             dimnames=list(alt, NULL, 1:n.draws, 1:moredraw))
   for (i in 1:n.obs) 
     for (j in 1:n.draws) {
-      Y[i,j] <- alt[match(max(c(0, W[,i,j])), c(0,W[,i,j]))]
-      O[,i,j] <- rank(c(0, -W[,i,j]))
+      for (k in 1:moredraw) {
+        Y[i,j,k] <- alt[match(max(c(0, W[,i,j,k])), c(0,W[,i,j,k]))]
+        O[,i,j,k] <- rank(c(0, -W[,i,j,k]))
+      }
     }
   if ("choice" %in% type)
     ans$y <- Y
@@ -84,10 +88,11 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL,
 
   ## computing P
   if ("prob" %in% type) {
-    P <- matrix(NA, nrow = n.obs, ncol = p)
-    colnames(P) <- alt
+    P <- array(NA, dim = c(n.obs, p, moredraw),
+               dimnames = c(NULL, alt, 1:moredraw))
     for (i in 1:p)
-      P[,i] <- apply(Y==alt[i], 1, mean) 
+      for (j in 1:moredraw)
+        P[,i,j] <- apply(Y[,,j,drop=FALSE]==alt[i], 1, mean) 
     ans$p <- P
   }
   else
