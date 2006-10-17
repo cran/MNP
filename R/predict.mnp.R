@@ -52,7 +52,7 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
   Sigma <- cov.mnp(object)
   for (i in 1:n.draws) {
     for (j in 1:n.obs) 
-      W[,j,i,] <- matrix(x[j,], ncol=n.cov) %*% matrix(coef[i,]) +
+      W[,j,i,] <- c(matrix(x[j,], ncol=n.cov) %*% matrix(coef[i,], ncol = 1)) +
         mvrnorm(moredraw, mu = rep(0, p-1), Sigma = Sigma[,,i])
     if (i == inc*tmp & verbose) {
       cat("", inc*10, "percent done.\n")
@@ -68,7 +68,7 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
   ## computing Y
   Y <- array(NA, dim = c(n.obs, n.draws, moredraw),
              dimnames=list(NULL, 1:n.draws, 1:moredraw))
-  O <- array(NA, dim=c(p, n.obs, n.draws, 1:moredraw),
+  O <- array(NA, dim=c(p, n.obs, n.draws, moredraw),
              dimnames=list(alt, NULL, 1:n.draws, 1:moredraw))
   for (i in 1:n.obs) 
     for (j in 1:n.draws) {

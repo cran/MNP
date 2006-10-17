@@ -50,7 +50,7 @@
     predictive distributions are printed on the screen. The default is
     \code{FALSE}.
   }
-  \item{...}{further arguments passed to or from other methods.}
+  \item{...}{additional arguments passed to other methods.}
 }
 
 \details{The posterior predictive values are computed using the
