@@ -419,4 +419,183 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
   Free3DMatrix(PerSig, n_dim, n_dim);
 
 } /* main */
+
+
+/* unitility function */
+void R_max_col2(double **matrix, 
+	       int nr, 
+	       int nc, 
+	       int *maxes, 
+	       int ties_meth) {
+  
+  int *ncol = intArray(1);
+  int *nrow = intArray(1);
+  int *ties = intArray(1);
+  int *itmp = intArray(1);
+  double *tmp = doubleArray(nr*nc);
+  int i, j, k;
+
+  ncol[0] = nc; nrow[0] = nr; ties[0] = ties_meth;
+  i = 0;
+  for (k = 0; k < nc; k++)
+    for (j = 0; j < nr; j++)
+      tmp[i++] = matrix[j][k];
+
+  R_max_col(tmp, nrow, ncol, maxes, ties);
+
+  free(ncol);
+  free(nrow);
+  free(itmp);
+  free(tmp);
+
+}
  
+
+void predict(double *dX,     /* X matrix */
+	     int *nobs,      /* number of observations */
+	     double *dcoef,  /* coefficients */
+	     double *dSigma, /* covariances */
+	     int *ndims,     /* number of dimensions */
+	     int *ncovs,     /* number of covariates */
+	     int *ndraws,    /* number of MCMC draws */
+	     int *moredraws, /* number of extra draws */
+	     int *verbose,
+	     double *prob,   /* probability output */
+	     double *choice, /* choice output */
+	     double *order  /* order output */
+	     ) {
+
+  int n_samp = *nobs;
+  int n_draw = *ndraws;
+  int n_dim = *ndims;
+  int n_cov = *ncovs;
+  int n_extra = *moredraws; 
+
+  double **X = doubleMatrix(n_samp*n_dim, n_cov);
+  double *Xbeta = doubleArray(n_cov);
+  double **W = doubleMatrix(n_extra, n_dim+1);
+  double **beta = doubleMatrix(n_draw, n_cov);
+  double ***Sigma = doubleMatrix3D(n_draw, n_dim, n_dim);
+
+  int i, j, k, main_loop, itemp, itempP, itempO, itempC;
+  int total = n_extra*n_samp*n_draw;
+  int count, progress = 1; 
+  int itempQ = ftrunc((double) total/10);
+  int *maxdim = intArray(n_extra);
+  int *ind = intArray(n_dim+1);
+  int *sumorder = intArray(n_dim+1);
+  int *probTemp = intArray(n_dim+1);
+
+  /** reading the data */
+  itemp = 0;
+  for (k = 0; k < n_cov; k++) 
+    for (j = 0; j < n_dim; j++) 
+      for (i = 0; i < n_samp; i++) 
+	X[i*n_dim+j][k] = dX[itemp++];  
+
+  /** reading the MCMC draws **/
+  itemp = 0;
+  for (k = 0; k < n_cov; k++)
+    for (j = 0; j < n_draw; j++)
+      beta[j][k] = dcoef[itemp++];
+  
+  itemp = 0;
+  for (k = 0; k < n_dim; k++)
+    for (j = k; j < n_dim; j++)
+      for (i = 0; i < n_draw; i++) {
+	Sigma[i][j][k] = dSigma[itemp++];
+	Sigma[i][k][j] = Sigma[i][j][k];
+      }
+
+  /** get random seed **/
+  GetRNGstate();
+
+  /** Posterior predictive simulations **/
+  itempC = 0; itempO = 0; itempP = 0; count = 0; 
+  itempQ = 0;
+
+  /* loop for observations */
+  for (i = 0; i < n_samp; i++) { 
+    if (n_extra == 1) {
+      for (j = 0; j <= n_dim; j++) 
+	probTemp[j] = 0;
+    }
+    /* loop for MCMC draws */
+    for (main_loop = 0; main_loop < n_draw; main_loop++) {
+      if (n_extra > 1) {
+	for (j = 0; j <= n_dim; j++) 
+	  probTemp[j] = 0;
+      }
+      /* compute the mean for each dimension */
+      for (j = 0; j < n_dim; j++) {
+	Xbeta[j] = 0;
+	for (k = 0; k < n_cov; k++)
+	  Xbeta[j] += X[i*n_dim+j][k] * beta[main_loop][k];
+      }
+      /* sample W */
+      for (j = 0; j < n_extra; j++) {
+	rMVN(W[j], Xbeta, Sigma[main_loop], n_dim);
+	W[j][n_dim] = 0;
+      }
+      /* which dimension is max for each of n_extra W draws? */
+      /* PdoubleMatrix(W, n_extra, n_dim+1); */
+      R_max_col2(W, n_extra, n_dim+1, maxdim, 1);
+      /* PintArray(maxdim, n_extra); */
+      /* order */
+      for (j = 0; j < n_extra; j++) {
+	for (k = 0; k <= n_dim; k++) {
+	  ind[k] = k; sumorder[k] = 0;
+	}
+	rsort_with_index(W[j], ind, n_dim+1);
+	/* PintArray(ind, n_dim+1); */
+	for (k = 0; k <= n_dim; k++)
+	  sumorder[ind[k]] += (n_dim-k);
+	if(*verbose) {
+	  if(count == itempQ) {
+	    Rprintf("%3d percent done.\n", progress*10);
+	    itempQ += ftrunc((double) total/10); progress++;
+	    R_FlushConsole(); 
+	  }
+	  count++;
+	}
+      }
+      if (n_extra > 1) {
+	/* store probability and mean order */
+	for (j = 0; j <= n_dim; j++) {
+	  itemp = 0;
+	  for (k = 0; k < n_extra; k++)
+	    if (maxdim[k] == (j+1))
+	      itemp++;
+	  prob[itempP++] = ((double) itemp / (double) n_extra);
+	  order[itempO++] = ((double) sumorder[j] / (double) n_extra);
+	}
+      } else {
+	/* store choice */
+	for (j = 0; j <= n_dim; j++) {
+	  if (maxdim[0] == (j+1)) {
+	    choice[itempC++] = j;
+	    probTemp[j]++;
+	  }
+	  order[itempO++] = sumorder[j];
+	}
+      }
+    }
+    if (n_extra == 1)
+      for (j = 0; j <= n_dim; j++)
+	prob[itempP++] = ((double) probTemp[j] / (double) n_draw);
+  }
+
+  /** write out the random seed **/
+  PutRNGstate();
+
+  /* freeing memory */
+  FreeMatrix(X, n_samp*n_dim);
+  free(Xbeta);
+  FreeMatrix(W, n_extra);
+  FreeMatrix(beta, n_draw);
+  Free3DMatrix(Sigma, n_draw, n_dim);
+  free(maxdim);
+  free(ind);
+  free(sumorder);
+  free(probTemp);
+}

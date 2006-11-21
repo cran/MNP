@@ -1,10 +1,12 @@
-predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
-                        type = c("prob", "choice", "order", "latent"),
+predict.mnp <- function(object, newdata = NULL, newdraw = NULL, n.draws = 1,
+                        type = c("prob", "choice", "order"),
                         verbose = FALSE, ...){
 
-  if (NA %in% match(type, c("prob", "choice", "order", "latent")))
+  if (NA %in% match(type, c("prob", "choice", "order")))
     stop("Invalid input for `type'.")
-      
+  if (n.draws < 1)
+    stop("Invalid input for `n.draws'.")
+
   p <- object$n.alt
   if (is.null(newdraw))
     param <- object$param
@@ -12,7 +14,7 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
     param <- newdraw
   coef <- coef(object)
   n.cov <- ncol(coef)
-  n.draws <- nrow(param)
+  n.mcmc <- nrow(coef)
   cov <- param[,(n.cov+1):ncol(param)]
   
   ## get X matrix ready
@@ -31,7 +33,6 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
     else if (sum(is.na(x))>0)
       stop("Invalid input for `newdata'.")
   }
-  
   n.obs <- nrow(x)
   if (verbose) {
     if (n.obs == 1)
@@ -39,64 +40,44 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, moredraw = 1,
     else
       cat("There are", n.obs, "observations to predict. Please wait...\n")
   }
-  
+
   alt <- object$alt
   if (object$base != alt[1]) 
     alt <- c(object$base, alt[1:(length(alt)-1)])
-  
-  ## computing W
-  W <- array(NA, dim=c(p-1, n.obs, n.draws, moredraw),
-             dimnames=c(alt[2:p], NULL, 1:n.draws, 1:moredraw))
-  tmp <- floor(n.draws/10)
-  inc <- 1
-  Sigma <- cov.mnp(object)
-  for (i in 1:n.draws) {
-    for (j in 1:n.obs) 
-      W[,j,i,] <- c(matrix(x[j,], ncol=n.cov) %*% matrix(coef[i,], ncol = 1)) +
-        mvrnorm(moredraw, mu = rep(0, p-1), Sigma = Sigma[,,i])
-    if (i == inc*tmp & verbose) {
-      cat("", inc*10, "percent done.\n")
-      inc <- inc + 1
-    }
-  }
-  ans <- list()
-  if ("latent" %in% type)
-    ans$w <- W
-  else
-    ans$w <- NULL
 
-  ## computing Y
-  Y <- array(NA, dim = c(n.obs, n.draws, moredraw),
-             dimnames=list(NULL, 1:n.draws, 1:moredraw))
-  O <- array(NA, dim=c(p, n.obs, n.draws, moredraw),
-             dimnames=list(alt, NULL, 1:n.draws, 1:moredraw))
-  for (i in 1:n.obs) 
-    for (j in 1:n.draws) {
-      for (k in 1:moredraw) {
-        Y[i,j,k] <- alt[match(max(c(0, W[,i,j,k])), c(0,W[,i,j,k]))]
-        O[,i,j,k] <- rank(c(0, -W[,i,j,k]))
-      }
-    }
+  res <- .C("predict", as.double(x), as.integer(n.obs),
+            as.double(coef), as.double(cov), as.integer(p-1),
+            as.integer(n.cov), as.integer(n.mcmc),
+            as.integer(n.draws), as.integer(verbose),
+            prob = if (n.draws > 1) double(n.obs*n.mcmc*p)
+                   else double(n.obs*p),
+            choice = double(n.obs*n.mcmc),
+            order = double(n.obs*n.mcmc*p),
+            PACKAGE = "MNP")
+
+  ans <- list()
   if ("choice" %in% type)
-    ans$y <- Y
+    ans$y <- matrix(res$choice, ncol=n.mcmc, nrow = n.obs,
+                    byrow = TRUE, dimnames = list(rownames(x), 1:n.mcmc))
   else
     ans$y <- NULL
   if ("order" %in% type)
-    ans$o <- O
+    ans$o <- aperm(array(res$order, dim=c(p, n.mcmc, n.obs),
+                             dimnames = c(alt, 1:n.mcmc,
+                               rownames(x))), c(3,1,2))
   else
     ans$o <- NULL
-
-  ## computing P
-  if ("prob" %in% type) {
-    P <- array(NA, dim = c(n.obs, p, moredraw),
-               dimnames = c(NULL, alt, 1:moredraw))
-    for (i in 1:p)
-      for (j in 1:moredraw)
-        P[,i,j] <- apply(Y[,,j,drop=FALSE]==alt[i], 1, mean) 
-    ans$p <- P
-  }
+  if ("prob" %in% type)
+    if (n.draws > 1)
+      ans$p <- aperm(array(res$prob, dim = c(p, n.mcmc, n.obs),
+                           dimnames = c(alt, 1:nrow(coef),
+                             rownames(x))), c(3,1,2))
+    else
+      ans$p <- matrix(res$prob, nrow = n.obs, ncol = p, byrow = TRUE,
+                      dimnames = list(rownames(x), alt))
   else
     ans$p <- NULL
 
+  class(ans) <- "predict.mnp"
   return(ans)
 }

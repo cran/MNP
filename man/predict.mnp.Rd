@@ -10,8 +10,8 @@
 }
 
 \usage{
-  \method{predict}{mnp}(object, newdata = NULL, newdraw = NULL, moredraw = 1,
-          type = c("prob", "choice", "order", "latent"), verbose = FALSE, ...)
+  \method{predict}{mnp}(object, newdata = NULL, newdraw = NULL, n.draws = 1,
+          type = c("prob", "choice", "order"), verbose = FALSE, ...)
 }
 
 \arguments{
@@ -26,10 +26,11 @@
     posterior predictions. The default is the original MCMC draws stored
     in \code{object}.
   }
-  \item{moredraw}{The number of additional draws of latent variables for
-    each of MCMC draws. Given a particular MCMC draw of coefficients and
-    covariance matrix, the specified number of latent variables will be
-    sampled from the multivariate normal distribution.  This will be
+  \item{n.draws}{The number of additional Monte Carlo draws given each
+    MCMC draw of coefficients and covariance matrix. The specified
+    number of latent variables will be sampled from the multivariate
+    normal distribution, and the quantities of interest will be
+    calculated by averaging over these draws.  This will be
     particularly useful calculating the uncertainty of predicted
     probabilities. The default is \code{1}.
   }
@@ -39,11 +40,8 @@
     the most preferred choice among the choice set.
     \code{type = "choice"} returns the Monte Carlo sample of the 
     most preferred choice,
-    \code{type = "order"} returns the Monte Carlo sample of the
+    and \code{type = "order"} returns the Monte Carlo sample of the
     ordered preferences,
-    and \code{type = "latent"} returns the Monte Carlo sample of the
-    predictive values of the latent variable. The default is to return
-    all four types of posterior predictions.
   }
   \item{verbose}{logical. If \code{TRUE}, helpful messages along with a
     progress report on the Monte Carlo sampling from the posterior 
@@ -73,40 +71,33 @@
 }
 
 \value{
-  \code{predict.mnp} yields a list containing at least one of the
+  \code{predict.mnp} yields a list of class
+  \code{predict.mnp} containing at least one of the
   following elements:
-  \item{o}{A four dimensional array of the Monte Carlo sample from the
+  \item{o}{A three dimensional array of the Monte Carlo sample from the
     posterior predictive distribution of the ordered preferences. The
     first dimension corresponds to the alternatives in the choice set,
     the second dimension corresponds to the rows of \code{newdata} (or
     the original data set if \code{newdata} is left unspecified), 
-    the third dimension indexes the Monte Carlo sample, and the fourth
-    dimension is the number of additional draws given by
-    \code{moredraw}.}
-  \item{p}{A four dimensional array of the posterior predictive
+    and the third dimension indexes the Monte Carlo sample. If
+    \code{n.draws} is greater than 1, then each entry will be an average
+    over these additional draws.
+  }
+  \item{p}{A two or three dimensional array of the posterior predictive
     probabilities for each alternative in the choice set being most
     preferred. The first demension corresponds to the rows of
     \code{newdata} (or the original data set if \code{newdata} is left
-    unspecified), the second dimension corresponds
-    to the alternatives in the choice set, and the third diemsion
-    represents the number of additional draws given by \code{moredraw}.
+    unspecified), and the second dimension corresponds
+    to the alternatives in the choice set. If \code{n.draws} is greater
+    than 1, then the third diemsion exists and indexes the Monte Carlo
+    sample.  
   }
-  \item{y}{A three dimensional array of the Monte Carlo sample from the
+  \item{y}{A matrix of the Monte Carlo sample from the
     posterior predictive distribution of the most preferred choice. The
     first dimension correspond to the rows of \code{newdata} (or the
-    original data set if \code{newdata} is left unspecified), the
-    second dimension indexes the Monte Carlo sample, and the third
-    dimension represents the number of additional draws given by
-    \code{moredraw}.  
-  }
-  \item{w}{A four dimensional array of the Monte Carlo sample from the
-    posterior predictive distribution of the latent
-    variable. The first dimension corresponds to the alternatives in the
-     choice set, the second dimension corresponds to the rows of
-     \code{newdata} (or the original data set if \code{newdata} is left
-     unspecified), the third dimension indexes the Monte Carlo sample,
-     and the four dimension represents the number of additional draws
-     given by \code{moredraw}.
+    original data set if \code{newdata} is left unspecified), and the
+    second dimension indexes the Monte Carlo sample. \code{n.draws} will
+    be set to 1 when computing this quantity of interest.  
   }
 }
 

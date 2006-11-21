@@ -161,8 +161,8 @@ res1 <- mnp(choice ~ 1, choiceX = list(Surf=SurfPrice, Tide=TidePrice,
             thin = 3, verbose = TRUE)
 ## summarize the results
 summary(res1)
-## calculate the predicted probabilities for the first 5 observations
-predict(res1, newdata = detergent[1:3,], type="prob", verbose = TRUE)
+## calculate the quantities of interest for the first 3 observations
+pre1 <- predict(res1, newdata = detergent[1:3,])
 
 ## load the Japanese election data
 data(japan)
@@ -172,7 +172,9 @@ res2 <- mnp(cbind(LDP, NFP, SKG, JCP) ~ gender + education + age, data = japan,
 ## summarize the results
 summary(res2)
 ## calculate the predicted probabilities for the 10th observation
-predict(res2, newdata = japan[10,], type = "prob", verbose = TRUE)
+## averaging over 100 additional Monte Carlo draws given each of MCMC draw.
+pre2 <- predict(res2, newdata = japan[10,], type = "prob", n.draws = 100,
+                verbose = TRUE)
 }
 
 \value{
