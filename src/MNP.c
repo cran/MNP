@@ -473,8 +473,10 @@ void predict(double *dX,     /* X matrix */
 
   double **X = doubleMatrix(n_samp*n_dim, n_cov);
   double *Xbeta = doubleArray(n_cov);
+  double *vtemp = doubleArray(n_dim);
   double **W = doubleMatrix(n_extra, n_dim+1);
   double **beta = doubleMatrix(n_draw, n_cov);
+  double **mtemp = doubleMatrix(n_dim, n_dim);
   double ***Sigma = doubleMatrix3D(n_draw, n_dim, n_dim);
 
   int i, j, k, main_loop, itemp, itempP, itempO, itempC;
@@ -532,13 +534,17 @@ void predict(double *dX,     /* X matrix */
 	for (k = 0; k < n_cov; k++)
 	  Xbeta[j] += X[i*n_dim+j][k] * beta[main_loop][k];
       }
+      /* PdoubleArray(Xbeta, n_dim); */
       /* sample W */
       for (j = 0; j < n_extra; j++) {
-	rMVN(W[j], Xbeta, Sigma[main_loop], n_dim);
-	W[j][n_dim] = 0;
+	dinv(Sigma[main_loop], n_dim, mtemp);
+	rMVN(vtemp, Xbeta, mtemp, n_dim);
+	for (k = 0; k < n_dim; k++)
+	  W[j][k+1] = vtemp[k];
+	W[j][0] = 0;
       }
-      /* which dimension is max for each of n_extra W draws? */
-      /* PdoubleMatrix(W, n_extra, n_dim+1); */
+      /* which dimension is max for each of n_extra W draws? 
+	 PdoubleMatrix(W, n_extra, n_dim+1); */
       R_max_col2(W, n_extra, n_dim+1, maxdim, 1);
       /* PintArray(maxdim, n_extra); */
       /* order */
@@ -546,10 +552,10 @@ void predict(double *dX,     /* X matrix */
 	for (k = 0; k <= n_dim; k++) {
 	  ind[k] = k; sumorder[k] = 0;
 	}
-	rsort_with_index(W[j], ind, n_dim+1);
+	revsort(W[j], ind, n_dim+1);
 	/* PintArray(ind, n_dim+1); */
 	for (k = 0; k <= n_dim; k++)
-	  sumorder[ind[k]] += (n_dim-k);
+	  sumorder[ind[k]] += (k+1);
 	if(*verbose) {
 	  if(count == itempQ) {
 	    Rprintf("%3d percent done.\n", progress*10);
@@ -590,9 +596,11 @@ void predict(double *dX,     /* X matrix */
 
   /* freeing memory */
   FreeMatrix(X, n_samp*n_dim);
+  free(vtemp);
   free(Xbeta);
   FreeMatrix(W, n_extra);
   FreeMatrix(beta, n_draw);
+  FreeMatrix(mtemp, n_dim);
   Free3DMatrix(Sigma, n_draw, n_dim);
   free(maxdim);
   free(ind);

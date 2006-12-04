@@ -63,14 +63,14 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, n.draws = 1,
     ans$y <- NULL
   if ("order" %in% type)
     ans$o <- aperm(array(res$order, dim=c(p, n.mcmc, n.obs),
-                             dimnames = c(alt, 1:n.mcmc,
-                               rownames(x))), c(3,1,2))
+                         dimnames = list(alt, 1:n.mcmc,
+                           rownames(x))), c(3,1,2))
   else
     ans$o <- NULL
   if ("prob" %in% type)
     if (n.draws > 1)
       ans$p <- aperm(array(res$prob, dim = c(p, n.mcmc, n.obs),
-                           dimnames = c(alt, 1:nrow(coef),
+                           dimnames = list(alt, 1:n.mcmc,
                              rownames(x))), c(3,1,2))
     else
       ans$p <- matrix(res$prob, nrow = n.obs, ncol = p, byrow = TRUE,
