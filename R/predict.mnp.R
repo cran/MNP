@@ -8,12 +8,12 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, n.draws = 1,
     stop("Invalid input for `n.draws'.")
 
   p <- object$n.alt
-  if (is.null(newdraw))
+  if (is.null(newdraw)) 
     param <- object$param
   else
     param <- newdraw
-  coef <- coef(object)
-  n.cov <- ncol(coef)
+  n.cov <- ncol(coef(object))
+  coef <- param[,1:n.cov]
   n.mcmc <- nrow(coef)
   cov <- param[,(n.cov+1):ncol(param)]
   
