@@ -1,6 +1,6 @@
 Package: MNP
-Version: 2.5-4
-Date: 2007-05-24
+Version: 2.5-5
+Date: 2007-08-01
 Title: R Package for Fitting the Multinomial Probit Model
 Author: Kosuke Imai <kimai@princeton.edu>, 
         David A. van Dyk <dvd@uci.edu>. 
@@ -27,4 +27,4 @@ LazyLoad: yes
 LazyData: yes
 License: GPL (version 2 or later)
 URL: http://imai.princeton.edu/research/MNP.html
-Packaged: Thu May 24 12:08:24 2007; kimai
+Packaged: Wed Aug  1 20:15:11 2007; kimai

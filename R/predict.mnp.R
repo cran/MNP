@@ -78,6 +78,7 @@ predict.mnp <- function(object, newdata = NULL, newdraw = NULL, n.draws = 1,
   else
     ans$p <- NULL
 
+  ans$x <- x
   class(ans) <- "predict.mnp"
   return(ans)
 }

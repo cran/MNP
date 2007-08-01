@@ -76,10 +76,10 @@
   following elements:
   \item{o}{A three dimensional array of the Monte Carlo sample from the
     posterior predictive distribution of the ordered preferences. The
-    first dimension corresponds to the alternatives in the choice set,
-    the second dimension corresponds to the rows of \code{newdata} (or
-    the original data set if \code{newdata} is left unspecified), 
-    and the third dimension indexes the Monte Carlo sample. If
+    first dimension corresponds to the rows of \code{newdata} (or
+    the original data set if \code{newdata} is left unspecified),
+    the second dimension corresponds to the alternatives in the choice
+    set, and the third dimension indexes the Monte Carlo sample. If
     \code{n.draws} is greater than 1, then each entry will be an average
     over these additional draws.
   }
@@ -87,10 +87,11 @@
     probabilities for each alternative in the choice set being most
     preferred. The first demension corresponds to the rows of
     \code{newdata} (or the original data set if \code{newdata} is left
-    unspecified), and the second dimension corresponds
-    to the alternatives in the choice set. If \code{n.draws} is greater
-    than 1, then the third diemsion exists and indexes the Monte Carlo
-    sample.  
+    unspecified), the second dimension corresponds
+    to the alternatives in the choice set, and the third dimension (if
+    it exists) indexes the Monte Carlo sample. If \code{n.draws} is
+    greater than 1, then the third diemsion exists and indexes the Monte
+    Carlo sample.  
   }
   \item{y}{A matrix of the Monte Carlo sample from the
     posterior predictive distribution of the most preferred choice. The
@@ -98,6 +99,8 @@
     original data set if \code{newdata} is left unspecified), and the
     second dimension indexes the Monte Carlo sample. \code{n.draws} will
     be set to 1 when computing this quantity of interest.  
+  }
+  \item{x}{A matrix of covariates used for prediction
   }
 }
 
