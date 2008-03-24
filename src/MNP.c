@@ -112,8 +112,10 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
   itemp = 0;
   for (k = 0; k < n_cov; k++) 
     for (j = 0; j < n_dim; j++) 
-      for (i = 0; i < n_samp; i++) X[i*n_dim+j][k] = pdX[itemp++];
-
+      for (i = 0; i < n_samp; i++) 
+	X[i*n_dim+j][k] = pdX[itemp++];
+      
+  /* PdoubleMatrix(X, n_dim*3, n_cov); */
   itemp = 0;
   for (k = 0; k < n_cov; k++) 
     for (j = 0; j < n_cov; j++)	A0[j][k] = pdA0[itemp++];

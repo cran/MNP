@@ -10,17 +10,16 @@ ymatrix.mnp <- function(data, base=NULL, extra=FALSE, verbose=verbose) {
     if(!is.null(base))
       stop("Error: The last column of the response matrix must be the base category.\n No need to specify `base.'") 
     base <- lev[p]
-  }
-  else { # standard Multinomial Probit model        
+  } else { # standard Multinomial Probit model        
     Y <- as.factor(Y)
     lev <- levels(Y)
     if (!is.null(base))
       if (base %in% lev) {
-        lev <- c(base, lev[-pmatch(base, lev)])
-        levels(Y) <- lev
+        Y <- relevel(Y, ref = base)
+        lev <- levels(Y)
+      } else {
+        stop(paste("Error: `base' does not exist in the response variable."))
       }
-      else
-        stop(paste("Error: `base' does not exist in the response variable.")) 
     base <- lev[1]
     counts <- table(Y)
     if (any(counts == 0)) {

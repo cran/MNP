@@ -1,6 +1,6 @@
 Package: MNP
-Version: 2.5-5
-Date: 2007-08-01
+Version: 2.5-6
+Date: 2008-03-24
 Title: R Package for Fitting the Multinomial Probit Model
 Author: Kosuke Imai <kimai@princeton.edu>, 
         David A. van Dyk <dvd@uci.edu>. 
@@ -25,6 +25,6 @@ Description: MNP is a publicly available R package that fits the Bayesian
   Vol. 14, No. 3 (May), pp. 1-32.
 LazyLoad: yes
 LazyData: yes
-License: GPL (version 2 or later)
+License: GPL (>= 2)
 URL: http://imai.princeton.edu/research/MNP.html
-Packaged: Wed Aug  1 20:15:11 2007; kimai
+Packaged: Mon Mar 24 23:57:37 2008; kimai

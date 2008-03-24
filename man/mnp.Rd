@@ -200,8 +200,8 @@ pre2 <- predict(res2, newdata = japan[10,], type = "prob", n.draws = 100,
   \item{p.scale}{The prior scale matrix for the covariance matrix.}
   \item{burnin}{The number of initial burnin draws.}
   \item{thin}{The thinning interval.}
-  }
 }
+
 
 \references{
   Imai, Kosuke and David A. van Dyk. (2005a) \dQuote{A Bayesian Analysis
