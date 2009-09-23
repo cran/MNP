@@ -1,13 +1,13 @@
 mnp <- function(formula, data = parent.frame(), choiceX = NULL,
                 cXnames = NULL, base = NULL, latent = FALSE,
-                invcdf = FALSE, n.draws = 5000, p.var = "Inf",
+                invcdf = FALSE, trace = TRUE, n.draws = 5000, p.var = "Inf", 
                 p.df = n.dim+1, p.scale = 1, coef.start = 0,
                 cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) {   
   call <- match.call()
   mf <- match.call(expand = FALSE)
   mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$latent <-
     mf$p.var <- mf$p.df <- mf$p.scale <- mf$coef.start <- mf$invcdf <-
-      mf$cov.start <- mf$verbose <- mf$burnin <- mf$thin <- NULL   
+      mf$trace <- mf$cov.start <- mf$verbose <- mf$burnin <- mf$thin <- NULL   
   mf[[1]] <- as.name("model.frame")
   mf$na.action <- 'na.pass'
   mf <- eval.parent(mf)
@@ -29,6 +29,12 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
     stop("The number of alternatives should be at least 3.")
   if(verbose) 
     cat("The total number of alternatives is ", p, ".\n\n", sep="") 
+  if(verbose) {
+    if (trace)
+      cat("The trace restriction is used instead of the diagonal restriction.\n\n")
+    else
+      cat("The diagonal restriction is used instead of the trace restriction.\n\n")
+  }
   
   ### obtaining X
   tmp <- xmatrix.mnp(formula, data=eval.parent(data),
@@ -95,7 +101,7 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
     stop("`p.scale' must be ", n.dim, " x ", n.dim, sep="")
   if (sum(sign(eigen(p.scale)$values) < 1) > 0)
     stop("`p.scale' must be positive definite.")
-  else if (p.scale[1,1] != 1) {
+  else if ((trace == FALSE) & (p.scale[1,1] != 1)) {
     p.scale[1,1] <- 1
     warning("p.scale[1,1] will be set to 1.")
   }
@@ -114,13 +120,14 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
                n.cov, ".", sep=""))
   if (!is.matrix(cov.start)) {
     cov.start <- diag(n.dim)*cov.start
-    cov.start[1,1] <- 1
+    if (!trace)
+      cov.start[1,1] <- 1
   }
   else if (ncol(cov.start) != n.dim || nrow(cov.start) != n.dim)
     stop("The dimension of `cov.start' must be ", n.dim, " x ", n.dim, sep="")
   else if (sum(sign(eigen(cov.start)$values) < 1) > 0)
     stop("`cov.start' must be a positive definite matrix.")
-  else if (cov.start[1,1] != 1) {
+  else if ((trace == FALSE) & (cov.start[1,1] != 1)) {
     cov.start[1,1] <- 1
     warning("cov.start[1,1] will be set to 1.")
   }
@@ -148,7 +155,7 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
               as.double(p.scale*p.alpha0), as.double(X), as.integer(Y), 
               as.double(coef.start), as.double(cov.start), 
               as.integer(p.imp), as.integer(invcdf),
-              as.integer(burnin), as.integer(keep), 
+              as.integer(burnin), as.integer(keep), as.integer(trace),
               as.integer(verbose), as.integer(MoP), as.integer(latent),
               pdStore = double(n.par*floor((n.draws-burnin)/keep)),
               PACKAGE="MNP")$pdStore 
@@ -169,7 +176,7 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
 
   ## returning the object
   res <- list(param = param, x = X, y = Y, w = W, call = call, alt = lev,
-              n.alt = p, base = base, invcdf = invcdf,
+              n.alt = p, base = base, invcdf = invcdf, trace = trace,
               p.mean = if(p.imp) NULL else p.mean, p.var = p.var, 
               p.df = p.df, p.scale = p.scale, burnin = burnin, thin = thin) 
   class(res) <- "mnp"

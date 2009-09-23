@@ -22,6 +22,7 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
 	       int *invcdf,   /* use inverse cdf for TruncNorm? */
 	       int *piBurnin, /* the number of burnin */
 	       int *piKeep,
+	       int *itrace,
 	       int *verbose,  /* 1 if extra print is needed */ 
 	       int *piMoP,    /* 1 if Multinomial ordered Probit */
 	       int *latent,   /* 1 if W is stored */
@@ -354,7 +355,14 @@ void cMNPgibbs(int *piNDim, int *piNCov, int *piNSamp, int *piNGen,
     
     /* recompute some quantities using the updated alpha2 */
     for(j=0;j<n_cov;j++) beta[j]/=sqrt(alpha2);
-    alpha2=Sigma[0][0];
+    if (*itrace) {
+      alpha2=0;
+      for(k=0;k<n_dim; k++) 
+	alpha2+=Sigma[k][k];
+      alpha2 = alpha2/n_dim;
+    } else {
+      alpha2=Sigma[0][0];
+    }
     for(j=0;j<n_dim;j++)
       for(k=0;k<n_dim;k++) {
 	Sigma[j][k]/=alpha2;

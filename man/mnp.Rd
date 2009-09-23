@@ -16,7 +16,7 @@
 
 \usage{
 mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
-    base = NULL, latent = FALSE, invcdf = FALSE, n.draws = 5000,
+    base = NULL, latent = FALSE, invcdf = FALSE, trace = TRUE, n.draws = 5000,
     p.var = "Inf", p.df = n.dim+1, p.scale = 1, coef.start = 0,
     cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) 
 }
@@ -53,6 +53,12 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
     used for truncated normal sampling. If \code{FALSE}, then the
     rejection sampling method is used. The default is \code{FALSE}.
   }
+  \item{trace}{logical. If \code{TRUE}, then the trace of the variance 
+    covariance matrix is set to a constant (here, it is equal to \code{n.dim}) 
+    instead of setting its first diagonal element to 1.  The former avoids
+    the arbitrariness of fixing one particular diagonal element in order to achieve
+    identification (see Burgette and Nordheim, 2009).
+  }
   \item{n.draws}{A positive integer. The number of MCMC draws. The
     default is \code{5000}.
   }
@@ -66,25 +72,22 @@ mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
   degrees of freedom parameter for the covariance matrix. The default is
     \code{n.dim+1}, which is equal to the total number of alternatives.
   }
-  \item{p.scale}{A positive definite matrix whose first diagonal element
-    is set to \code{1}. The prior scale matrix for the covariance
-    matrix. The first diagonal element is set to 1 if
-    it is not equal to 1 already. A scalar input can be used to set the
+  \item{p.scale}{A positive definite matrix.  When \code{trace = FALSE}, its first diagonal element
+    is set to \code{1} if it is not equal to 1 already. The prior scale matrix for the covariance
+    matrix. A scalar input can be used to set the
     scale matrix to a diagonal matrix with diagonal elements equal to
-    the scalar input value, except that the first diagonal element is
-    set to one. The default is \code{1}.
+    the scalar input value. The default is \code{1}.
   }
   \item{coef.start}{A vector. The starting values for the coefficients.
     A scalar input sets the starting values for all the coefficients
     equal to that value.  The default is \code{0}.
   }
-  \item{cov.start}{A positive definite matrix whose first diagonal
-    element is set to \code{1}. The starting values for the covariance
-    matrix. The first diagonal element is set to 1 if it is not
-    equal to 1 already. A scalar input can be used to set the starting
+  \item{cov.start}{A positive definite matrix. When \code{trace = FALSE}, its first diagonal
+    element is set to \code{1} if it is not
+    equal to 1 already. The starting values for the covariance
+    matrix. A scalar input can be used to set the starting
     value to a diagonal matrix with diagonal elements equal to the scalar
-    input value, except that the first diagonal element is set to
-    one. The default is \code{1}. 
+    input value. The default is \code{1}. 
   }
   \item{burnin}{A positive integer. The burnin interval for the Markov
     chain; i.e., the number of initial Gibbs draws that should not be
@@ -212,6 +215,11 @@ pre2 <- predict(res2, newdata = japan[10,], type = "prob", n.draws = 100,
   Imai, Kosuke and David A. van Dyk. (2005b) \dQuote{MNP: R Package for
     Fitting the Multinomial Probit Models,} \emph{Journal of Statistical
   Software}, Vol. 14, No. 3 (May), pp.1-32.
+
+  Burgette, L.F. and E.V. Nordheim. (2009).  \dQuote{An alternate identifying
+  restriction for the Bayesian multinomial probit model,} \emph{Technical
+  report}, Department of Statistics, University of Wisconsin, Madison.
+
 }
 
 \author{
