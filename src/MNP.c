@@ -547,8 +547,8 @@ void predict(double *dX,     /* X matrix */
       /* PdoubleArray(Xbeta, n_dim); */
       /* sample W */
       for (j = 0; j < n_extra; j++) {
-	dinv(Sigma[main_loop], n_dim, mtemp);
-	rMVN(vtemp, Xbeta, mtemp, n_dim);
+	/*dinv(Sigma[main_loop], n_dim, mtemp);*/
+	rMVN(vtemp, Xbeta, Sigma[main_loop], n_dim);
 	for (k = 0; k < n_dim; k++)
 	  W[j][k+1] = vtemp[k];
 	W[j][0] = 0;

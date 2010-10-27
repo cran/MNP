@@ -10,6 +10,39 @@
 #include "rand.h"
 
 
+double sTruncNorm(
+		  double bd, /* bound */
+		  double mu,
+		  double var,
+		  int lower     /* 1 = x > bd, 0 = x < bd */
+		  ) {
+
+  double z, logb, lambda, u;
+  double sigma = sqrt(var);
+  double stbd = (bd - mu)/sigma;
+
+  if (lower == 0) {
+    stbd = (mu - bd)/sigma;
+  }
+  if (stbd > 0) {
+    lambda = 0.5*(stbd + sqrt(stbd*stbd + 4));
+    logb = 0.5*(lambda*lambda-2*lambda*stbd);
+    do {
+      z = rexp(1/lambda);
+      /* Rprintf("%5g\n", exp(-0.5*(z+stbd)*(z+stbd)+lambda*z-logb)); */
+    } while (unif_rand() > exp(-0.5*(z+stbd)*(z+stbd)+lambda*z-logb));
+  } else {
+    do z = norm_rand();
+    while(z < stbd); 
+  }
+  if (lower == 1) {
+    return(z*sigma + mu);
+  } else {
+    return(-z*sigma + mu);
+  }
+}
+
+
 /* Sample from a univariate truncated Normal distribution 
    (truncated both from above and below): choose either inverse cdf
    method or rejection sampling method. For rejection sampling, 
@@ -27,8 +60,12 @@ double TruncNorm(
   double sigma = sqrt(var);
   double stlb = (lb-mu)/sigma;  /* standardized lower bound */
   double stub = (ub-mu)/sigma;  /* standardized upper bound */
-  if(stlb >= stub)
+  if(stlb > stub)
     error("TruncNorm: lower bound is greater than upper bound\n");
+  if(stlb == stub) {
+    warning("TruncNorm: lower bound is equal to upper bound\n");
+    return(stlb*sigma + mu);
+  }
   if (invcdf) {  /* inverse cdf method */
     z = qnorm(runif(pnorm(stlb, 0, 1, 1, 0), pnorm(stub, 0, 1, 1, 0)),
 	      0, 1, 1, 0); 
