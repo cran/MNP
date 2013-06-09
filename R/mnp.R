@@ -4,7 +4,7 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
                 p.df = n.dim+1, p.scale = 1, coef.start = 0,
                 cov.start = 1, burnin = 0, thin = 0, verbose = FALSE) {   
   call <- match.call()
-  mf <- match.call(expand = FALSE)
+  mf <- match.call(expand.dots = FALSE)
   mf$choiceX <- mf$cXnames <- mf$base <- mf$n.draws <- mf$latent <-
     mf$p.var <- mf$p.df <- mf$p.scale <- mf$coef.start <- mf$invcdf <-
       mf$trace <- mf$cov.start <- mf$verbose <- mf$burnin <- mf$thin <- NULL   
@@ -164,7 +164,7 @@ mnp <- function(formula, data = parent.frame(), choiceX = NULL,
   if (latent) {
     W <- array(as.vector(t(param[,(n.par-n.dim*n.obs+1):n.par])),
                dim = c(n.dim, n.obs, floor((n.draws-burnin)/keep)),
-               dimnames = list(lev[-1], rownames(Y), NULL))
+               dimnames = list(lev[!(lev %in% base)], rownames(Y), NULL))
     param <- param[,1:(n.par-n.dim*n.obs)]
     }
   else

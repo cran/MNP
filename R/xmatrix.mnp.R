@@ -2,7 +2,7 @@ xmatrix.mnp <- function(formula, data = parent.frame(), choiceX=NULL,
                         cXnames=NULL, base=NULL, n.dim, lev,
                         MoP=FALSE, verbose=FALSE, extra=FALSE) {
   call <- match.call()
-  mf <- match.call(expand = FALSE)
+  mf <- match.call(expand.dots = FALSE)
   mf$choiceX <- mf$cXnames <- mf$base <- mf$n.dim <- mf$lev <-
     mf$MoP <- mf$verbose <- mf$extra <- NULL  
   
