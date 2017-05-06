@@ -1,3 +1,16 @@
+#' Print the summary of the results for the Multinomial Probit Models
+#' 
+#' \code{summary} print method for class \code{mnp}.
+#' 
+#' @aliases print.summary.mnp
+#' @param x An object of class \code{summary.mnp}.
+#' @param digits the number of significant digits to use when printing.
+#' @param ... further arguments passed to or from other methods.
+#' @author Kosuke Imai, Department of Politics, Princeton University
+#' \email{kimai@Princeton.Edu}
+#' @seealso \code{mnp}
+#' @keywords methods
+#' @export print.summary.mnp
 print.summary.mnp <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 
   cat("\nCall:\n")
