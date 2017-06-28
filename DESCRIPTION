@@ -1,11 +1,11 @@
 Package: MNP
-Version: 3.0-1
-Date: 2017-05-05
+Version: 3.0-2
+Date: 2017-06-28
 Title: R Package for Fitting the Multinomial Probit Model
 Authors@R: c(
   person("Kosuke", "Imai", , "kimai@princeton.edu", c("aut", "cre")),
   person("David", "van Dyk", , "dvandyk@imperial.ac.uk", c("aut")),
-  person("Jin", "Hubert", , "hubertj@princeton.edu", c("ctb"))
+  person("Hubert", "Jin", , "hubertj@princeton.edu", c("ctb"))
   )
 Maintainer: Kosuke Imai <kimai@princeton.edu>
 Depends: R (>= 2.1), MASS, utils
@@ -33,9 +33,9 @@ URL: http://imai.princeton.edu/software/MNP.html
 BugReports: https://github.com/kosukeimai/MNP/issues
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
-Packaged: 2017-05-06 03:06:18 UTC; kimai
+Packaged: 2017-06-27 23:52:01 UTC; kimai
 Author: Kosuke Imai [aut, cre],
   David van Dyk [aut],
-  Jin Hubert [ctb]
+  Hubert Jin [ctb]
 Repository: CRAN
-Date/Publication: 2017-05-06 05:17:20 UTC
+Date/Publication: 2017-06-28 05:59:55 UTC
