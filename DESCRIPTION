@@ -1,6 +1,6 @@
 Package: MNP
-Version: 3.0-2
-Date: 2017-06-28
+Version: 3.1-0
+Date: 2017-09-27
 Title: R Package for Fitting the Multinomial Probit Model
 Authors@R: c(
   person("Kosuke", "Imai", , "kimai@princeton.edu", c("aut", "cre")),
@@ -9,6 +9,7 @@ Authors@R: c(
   )
 Maintainer: Kosuke Imai <kimai@princeton.edu>
 Depends: R (>= 2.1), MASS, utils
+Suggests: testthat
 Description: Fits the Bayesian multinomial probit model via Markov chain
  Monte Carlo.  The multinomial probit model is often used to analyze 
  the discrete choices made by individuals recorded in survey data. 
@@ -33,9 +34,9 @@ URL: http://imai.princeton.edu/software/MNP.html
 BugReports: https://github.com/kosukeimai/MNP/issues
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
-Packaged: 2017-06-27 23:52:01 UTC; kimai
+Packaged: 2017-09-27 10:37:17 UTC; kimai
 Author: Kosuke Imai [aut, cre],
   David van Dyk [aut],
   Hubert Jin [ctb]
 Repository: CRAN
-Date/Publication: 2017-06-28 05:59:55 UTC
+Date/Publication: 2017-09-27 11:40:20 UTC
