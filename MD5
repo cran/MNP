@@ -1,5 +1,5 @@
 3ee63bcf5243c6396e0592e3d124939e *ChangeLog
-dcf686b1e76d12012e8591bae3c4b324 *DESCRIPTION
+6119acbfc97bad30eb842a8ae01b115e *DESCRIPTION
 f8f774d9d0b6b798b2158bd77c7b126a *NAMESPACE
 0fb08f470802dd710f15dfc2cc3e91ab *R/coef.mnp.R
 28797d8b4e633d8bc6a64244c59b2ee7 *R/cov.mnp.R
@@ -13,11 +13,11 @@ e822d2e847f5daf2922a019fa2a4c491 *R/print.mnp.R
 3aad35e5779bc160ee891c3e279109be *R/summary.mnp.R
 cfdc76deb4c1e71bdb9422bf9f2cecd9 *R/xmatrix.mnp.R
 f594a4e2db80f456c9dee49d5f9efa6c *R/ymatrix.mnp.R
-ac3b415e9cbd5c0af266d7de0711d9d6 *build/vignette.rds
+45e4f809b495d914db7313c8ff05e38d *build/vignette.rds
 c342e6c52a792ec58aac9efa0be703ae *data/detergent.txt.gz
 bb1181c0a078518436a2a7c9ee5594a9 *data/japan.txt.gz
 9ca37d86e3f3aaea7e63f7e9df31b561 *inst/doc/MNP.Rnw
-80fb33f1bb588e10968cc8e5b1f6ebc7 *inst/doc/MNP.pdf
+3983e795e5e35abb03cde7cfba7f823f *inst/doc/MNP.pdf
 037ee471d43097393839f831aef8f4d7 *man/coef.mnp.Rd
 34ff270e9f6c9d48dfa0b39b0a0dbfa7 *man/cov.mnp.Rd
 2545b41aa3684b8422d3409eb4564ab0 *man/detergent.Rd
