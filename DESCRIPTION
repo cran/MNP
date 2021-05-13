@@ -1,6 +1,6 @@
 Package: MNP
-Version: 3.1-1
-Date: 2020-10-22
+Version: 3.1-2
+Date: 2021-05-12
 Title: Fitting the Multinomial Probit Model
 Authors@R: c(
   person("Kosuke", "Imai", , "imai@harvard.edu", c("aut", "cre")),
@@ -34,9 +34,9 @@ URL: https://github.com/kosukeimai/MNP
 BugReports: https://github.com/kosukeimai/MNP/issues
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
-Packaged: 2020-10-22 14:58:16 UTC; kimai
+Packaged: 2021-05-12 20:50:41 UTC; kimai
 Author: Kosuke Imai [aut, cre],
   David van Dyk [aut],
   Hubert Jin [ctb]
 Repository: CRAN
-Date/Publication: 2020-10-22 21:30:06 UTC
+Date/Publication: 2021-05-13 04:32:16 UTC
