@@ -5,11 +5,25 @@
 \alias{MNP}
 \title{Fitting the Multinomial Probit Model via Markov chain Monte Carlo}
 \usage{
-mnp(formula, data = parent.frame(), choiceX = NULL, cXnames = NULL,
-  base = NULL, latent = FALSE, invcdf = FALSE, trace = TRUE,
-  n.draws = 5000, p.var = "Inf", p.df = n.dim + 1, p.scale = 1,
-  coef.start = 0, cov.start = 1, burnin = 0, thin = 0,
-  verbose = FALSE)
+mnp(
+  formula,
+  data = parent.frame(),
+  choiceX = NULL,
+  cXnames = NULL,
+  base = NULL,
+  latent = FALSE,
+  invcdf = FALSE,
+  trace = TRUE,
+  n.draws = 5000,
+  p.var = "Inf",
+  p.df = n.dim + 1,
+  p.scale = 1,
+  coef.start = 0,
+  cov.start = 1,
+  burnin = 0,
+  thin = 0,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{formula}{A symbolic description of the model to be fit specifying the
@@ -90,29 +104,29 @@ is \code{FALSE}.}
 An object of class \code{mnp} containing the following elements:
 \item{param}{A matrix of the Gibbs draws for each parameter; i.e., the
 coefficients and covariance matrix. For the covariance matrix, the elements
-on or above the diagonal are returned.  } 
+on or above the diagonal are returned.  }
 \item{call}{The matched call.}
-\item{x}{The matrix of covariates.} 
+\item{x}{The matrix of covariates.}
 \item{y}{The vector or matrix of the
-response variable.} 
+response variable.}
 \item{w}{The three dimensional array of the latent
 variable, W. The first dimension represents the alternatives, and the second
 dimension indexes the observations. The third dimension represents the Gibbs
 draws. Note that the latent variable for the base category is set to 0, and
-therefore omitted from the output.} 
+therefore omitted from the output.}
 \item{alt}{The names of alternatives.}
-\item{n.alt}{The total number of alternatives.} 
+\item{n.alt}{The total number of alternatives.}
 \item{base}{The base
-category used for fitting.} 
-\item{invcdf}{The value of 
+category used for fitting.}
+\item{invcdf}{The value of
 \code{invcdf}.}
-\item{p.var}{The prior variance for the coefficients.} 
+\item{p.var}{The prior variance for the coefficients.}
 \item{p.df}{The prior
-degrees of freedom parameter for the covariance matrix.} 
+degrees of freedom parameter for the covariance matrix.}
 \item{p.scale}{The
-prior scale matrix for the covariance matrix.} 
+prior scale matrix for the covariance matrix.}
 \item{burnin}{The number of
-initial burnin draws.} 
+initial burnin draws.}
 \item{thin}{The thinning interval.}
 }
 \description{
@@ -209,12 +223,12 @@ restriction for the Bayesian multinomial probit model,} \emph{Technical
 report}, Department of Statistics, University of Wisconsin, Madison.
 }
 \seealso{
-\code{coef.mnp}, \code{cov.mnp}, \code{predict.mnp},
+\code{coef.mnp}, \code{vcov.mnp}, \code{predict.mnp},
 \code{summary.mnp};
 }
 \author{
-Kosuke Imai, Department of Politics, Princeton University
-\email{kimai@Princeton.Edu}, \url{http://imai.princeton.edu}; David A. van
+Kosuke Imai, Department of Government and Department of Statistics, Harvard University
+\email{imai@Harvard.Edu}, \url{https://imai.fas.harvard.edu}; David A. van
 Dyk, Statistics Section, Department of Mathematics, Imperial College London.
 }
 \keyword{models}

@@ -1,9 +1,8 @@
 #' Summarizing the results for the Multinomial Probit Models
-#' 
+#'
 #' \code{summary} method for class \code{mnp}.
-#' 
-#' 
-#' @aliases summary.mnp
+#'
+#'
 #' @param object An output object from \code{mnp}.
 #' @param CI A 2 dimensional vector of lower and upper bounds for the credible
 #' intervals used to summarize the results. The default is the equal tail 95
@@ -18,31 +17,31 @@
 #' of the posterior distribution of the coefficients. } \item{cov.table}{The
 #' summary of the posterior distribution of the covariance matrix.} This object
 #' can be printed by \code{print.summary.mnp}
-#' @author Kosuke Imai, Department of Politics, Princeton University
-#' \email{kimai@Princeton.Edu}
+#' @author Kosuke Imai, Department of Government and Department of Statistics, Harvard University
+#' \email{imai@Harvard.Edu}
 #' @seealso \code{mnp}
 #' @keywords methods
-#' @export summary.mnp
+#' @exportS3Method summary mnp
 summary.mnp <- function(object, CI=c(2.5, 97.5),...){
 
   p <- object$n.alt
   param <- object$param
   n.cov <- ncol(param) - p*(p-1)/2
   n.draws <- nrow(param)
-  param.table <- cbind(apply(param, 2, mean), apply(param, 2, sd),
-                       apply(param, 2, quantile, min(CI)/100),
-                       apply(param, 2, quantile, max(CI)/100)) 
+  param.table <- cbind(apply(param, 2, mean), apply(param, 2, stats::sd),
+                       apply(param, 2, stats::quantile, min(CI)/100),
+                       apply(param, 2, stats::quantile, max(CI)/100))
   colnames(param.table) <- c("mean", "std.dev.", paste(min(CI), "%", sep=""),
                              paste(max(CI), "%", sep=""))
   rownames(param.table) <- colnames(param)
-  
+
   ans <- list(call = object$call, base = object$base, n.alt=p,
               n.obs = if(is.matrix(object$y)) nrow(object$y) else length(object$y),
               n.param = ncol(param)-1, n.draws = n.draws,
               coef.table= if(n.cov > 1) param.table[1:n.cov,]
               else matrix(param.table[1,], nrow=1,
                           dimnames=list(rownames(param.table)[1], colnames(param.table))),
-              cov.table=param.table[(n.cov+1):ncol(param),])  
+              cov.table=param.table[(n.cov+1):ncol(param),])
   class(ans) <- "summary.mnp"
   return(ans)
 }

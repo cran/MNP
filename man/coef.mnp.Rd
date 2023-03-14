@@ -2,7 +2,6 @@
 % Please edit documentation in R/coef.mnp.R
 \name{coef.mnp}
 \alias{coef.mnp}
-\alias{coefficients.mnp}
 \title{Extract Multinomial Probit Model Coefficients}
 \usage{
 \method{coef}{mnp}(object, subset = NULL, ...)
@@ -29,10 +28,10 @@ coefficients from ojbects returned by \code{mnp}. \code{coefficients.mnp} is
 an alias for it. \code{coef} method for class \code{mnp}.
 }
 \seealso{
-\code{mnp}, \code{cov.mnp};
+\code{mnp}, \code{vcov.mnp};
 }
 \author{
-Kosuke Imai, Department of Politics, Princeton University
+Kosuke Imai, Department of Government and Department of Statistics, Harvard University
 \email{kimai@Princeton.Edu}
 }
 \keyword{methods}
